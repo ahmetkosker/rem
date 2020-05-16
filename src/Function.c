@@ -9,39 +9,79 @@ void search(char word[100])
     FILE *f;
     while (word[i] != '\0')
         i++;
+
     length = i;
-    i = 0;
+    i = 1;
     int j;
     f = fopen("/home/ahmet/grep.txt", "r");
-    character = fgetc(f);
-    if (word[0] == character)
-    {
-        state = 1;
-        i++;
-    }
+
     while (!feof(f))
     {
         character = fgetc(f);
-        for (j = 0; j < length; j++)
+        if (word[0] == character)
+            state = 1;
+        else
         {
-            if (state == j)
+            for (i; i < length; i++)
             {
-                if (word[i] == character)
+                if (state == i)
                 {
-                    state = j + 1;
-                    if (state == length)
+                    if (word[i] = character)
                     {
-                        printf("Found");
-                        break;
+                        state = i + 1;
                     }
-                }
-                else
-                {
-                    state = 0;
+                    else
+                    {
+                        state = 0;
+                    }
+                    break;
                 }
             }
         }
-        i++;
+        if (state == length)
+        {
+            printf("Found");
+            break;
+        }
+        /*character = fgetc(f);
+        if (word[0] == character)
+            state = 1;
+        else if (state == 1)
+        {
+            if (word[1] == character)
+                state = 2;
+            else
+                state = 0;
+        }
+        else if (state == 2)
+        {
+            if (word[2] == character)
+                state = 3;
+            else
+                state = 0;
+        }
+        else if (state == 3)
+        {
+            if (word[3] == character)
+                state = 4;
+            else
+                state = 0;
+        }
+        else if (state == 4)
+        {
+            if (word[4] == character)
+                state = 5;
+            else
+                state = 0;
+        }
+        if (state == 5)
+        {
+            printf("Found");
+            break;
+        }
+    }
+    if (state == 0)
+        printf("There is not");*/
     }
 }
 
