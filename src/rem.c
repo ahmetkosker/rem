@@ -18,8 +18,11 @@ void search(char word[100])
     while (!feof(f))
     {
         character = fgetc(f);
+        i = 1;
         if (word[0] == character)
+        {
             state = 1;
+        }
         else
         {
             for (i; i < length; i++)
