@@ -7,11 +7,13 @@ int search(FILE *f, char *word)
     int length = strlen(word);
     int i = 0;
     char character;
+    int count = 0;
+    int temp;
     while (!feof(f))
     {
         character = fgetc(f);
 
-        if (word[0] == character)
+        if (word[0] == character && (state == 0 || state == 1))
         {
             state = 1;
         }
@@ -34,7 +36,21 @@ int search(FILE *f, char *word)
             }
         }
         if (state == length)
-            break;
+        {
+            count++;
+            temp = state;
+            state = 0;
+        }
     }
-    return state == length;
+    if (temp == length)
+    {
+        if (count != 1)
+            printf("There are %d\n", count);
+        else
+            printf("There is %d\n", count);
+    }
+    else
+        printf("There is none\n");
+
+    return temp == length;
 }
