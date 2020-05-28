@@ -13,15 +13,13 @@ int search(FILE *f, char *word)
     int count = 0;
     int x = 0;
     int temp = 0;
-    FILE *f1;
-    f1 = fopen("/home/ahmet/grep.txt", "r");
-    while (!feof(f1))
+    while (!feof(f))
     {
-        character1 = fgetc(f1);
+        character1 = fgetc(f);
         z++;
     }
-    fclose(f1);
     int sum = 0;
+    fseek(f, 0, SEEK_SET);
     while (!feof(f))
     {
         if (x)
@@ -34,20 +32,23 @@ int search(FILE *f, char *word)
         if (state == length)
         {
             count++;
-            temp = j - (length + 11);
-            if (temp >= 10 && z - j >= 10)
+            if (j - (length + 11) > 0 && z - j > 10)
             {
-                FILE *fp;
-                fp = fopen("/home/ahmet/grep.txt", "r");
-                char charr;
-                for (sum; sum < temp; sum++)
-                    charr = fgetc(fp);
-                for (sum; sum < j + 9; sum++)
+                fseek(f, j - (length + 11), SEEK_SET);
+                for (sum; sum < (length + 20); sum++)
                 {
-                    charr = fgetc(fp);
-                    printf("%c", charr);
+                    character1 = fgetc(f);
+                    printf("%c", character1);
                 }
-                fclose(fp);
+            }
+            else
+            {
+                int a = 0;
+                while ((word[a]) != '\0')
+                {
+                    printf("%c", word[a]);
+                    a++;
+                }
             }
             temp = state;
             state = 0;
