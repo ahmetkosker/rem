@@ -7,7 +7,7 @@ int main()
 
     if (search(fopen(TEST_FILE, "r"), "ahmet") == 0)
     {
-        printf("Test failed:Ahmet'i bulamadı.\n");
+        printf("Test failed:3 tane bulamadı.\n");
         return -1;
     }
 
