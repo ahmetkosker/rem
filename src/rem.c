@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 
-int match_in_file(FILE *f, char *regex)
+unsigned int match_in_file(FILE *f, char *regex)
 {
-    int state = 0;
-    int length = strlen(regex);
-    int i = 0;
+    unsigned int state = 0;
+    size_t length = strlen(regex);
+    unsigned int i = 0;
     char character;
-    int count = 0;
-    int automata_failed = 0;
+    unsigned int count = 0;
+    unsigned int automata_failed = 0;
     while (!feof(f)) //Dosya bitene kadar.
     {
         if (automata_failed) //Yeni karakter okumuyoruz.
