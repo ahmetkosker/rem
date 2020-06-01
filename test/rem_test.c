@@ -1,28 +1,34 @@
 #include <stdio.h>
 #include "../src/rem.c"
-#define TEST_FILE "/home/ahmet/grep.txt"
+#define TEST_FILE "src/rem.c"
 
 int main()
 {
 
-    if (match_in_file(fopen(TEST_FILE, "r"), "ahmet") != 3)
+    if (match_in_file(fopen(TEST_FILE, "r"), "automata_failed") != 4)
     {
-        printf("Test failed:3 ahmet tane bulamadı.\n");
+        printf("Test failed:4 tane automata failed bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "akman") != 1)
+    if (match_in_file(fopen(TEST_FILE, "r"), "state") != 7)
     {
-        printf("Test failed:1 akman tane bulamadı.\n");
+        printf("Test failed:7 tane state bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "metallica") != 2)
+
+    if (match_in_file(fopen(TEST_FILE, "r"), "regex_len") != 3)
     {
-        printf("Test failed:2 metallica tane bulamadı.\n");
+        printf("Test failed:3 tane regex_len bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "duvar") != 0)
+    if (match_in_file(fopen(TEST_FILE, "r"), "1") != 2)
     {
-        printf("Test failed:duvar buldu.\n");
+        printf("Test failed:2 tane 1 bulunmadı.\n");
+        return -1;
+    }
+    if (match_in_file(fopen(TEST_FILE, "r"), "+") != 5)
+    {
+        printf("Test failed:5 tane + bulunmadı.\n");
         return -1;
     }
 
