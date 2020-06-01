@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <string.h>
 
-int search(FILE *f, char *word)
+int match_in_file(FILE *f, char *regex)
 {
     int state = 0;
-    int length = strlen(word);
+    int length = strlen(regex);
     int i = 0;
     char character;
     int count = 0;
-    int x = 0;
+    int automata_failed = 0;
     while (!feof(f)) //Dosya bitene kadar.
     {
-        if (x) //Yeni karakter okumuyoruz.
-            x = 0;
+        if (automata_failed) //Yeni karakter okumuyoruz.
+            automata_failed = 0;
         else
         {
             character = fgetc(f); //Karakter okunuyor.
@@ -21,14 +21,14 @@ int search(FILE *f, char *word)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (word[i] == character) //Okunan karakter duruma bağlı harfe eşitse.
+                if (regex[i] == character) //Okunan karakter duruma bağlı harfe eşitse.
                 {
                     state = i + 1; //Bir sonraki harfe geçiyoruz.
                 }
                 else
                 {
-                    if (state != 0) //Arka arkaya gelen aynı harfler için otomatının patlamasına karşı bunu yapıyoruz.
-                        x = 1;
+                    if (state != 0) //Arka arkaya gelen aynı harfler için automata'nın patlamasına karşı bunu yapıyoruz.
+                        automata_failed = 1;
                     state = 0;
                 }
                 break;

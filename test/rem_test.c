@@ -5,22 +5,22 @@
 int main()
 {
 
-    if (search(fopen(TEST_FILE, "r"), "ahmet") != 3)
+    if (match_in_file(fopen(TEST_FILE, "r"), "ahmet") != 3)
     {
         printf("Test failed:3 ahmet tane bulamadı.\n");
         return -1;
     }
-    if (search(fopen(TEST_FILE, "r"), "akman") != 1)
+    if (match_in_file(fopen(TEST_FILE, "r"), "akman") != 1)
     {
         printf("Test failed:1 akman tane bulamadı.\n");
         return -1;
     }
-    if (search(fopen(TEST_FILE, "r"), "metallica") != 2)
+    if (match_in_file(fopen(TEST_FILE, "r"), "metallica") != 2)
     {
         printf("Test failed:2 metallica tane bulamadı.\n");
         return -1;
     }
-    if (search(fopen(TEST_FILE, "r"), "duvar") != 0)
+    if (match_in_file(fopen(TEST_FILE, "r"), "duvar") != 0)
     {
         printf("Test failed:duvar buldu.\n");
         return -1;
