@@ -3,25 +3,26 @@
 
 unsigned int match_in_file(FILE *f, char *regex)
 {
-    unsigned int state = 0;
-    size_t length = strlen(regex);
-    unsigned int i = 0;
-    char character;
     unsigned int count = 0;
+    size_t regex_len = strlen(regex);
+    char next_char;
     unsigned int automata_failed = 0;
+    unsigned int state = 0;
+    unsigned int i = 0;
+
     while (!feof(f)) //Dosya bitene kadar.
     {
         if (automata_failed) //Yeni karakter okumuyoruz.
             automata_failed = 0;
         else
         {
-            character = fgetc(f); //Karakter okunuyor.
+            next_char = fgetc(f); //Karakter okunuyor.
         }
-        for (i = 0; i < length; i++)
+        for (i = 0; i < regex_len; i++)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (regex[i] == character) //Okunan karakter duruma bağlı harfe eşitse.
+                if (regex[i] == next_char) //Okunan karakter duruma bağlı harfe eşitse.
                 {
                     state = i + 1; //Bir sonraki harfe geçiyoruz.
                 }
@@ -34,7 +35,7 @@ unsigned int match_in_file(FILE *f, char *regex)
                 break;
             }
         }
-        if (state == length) //Kelime bulunduysa.
+        if (state == regex_len) //Kelime bulunduysa.
         {
             count++;
             state = 0;
