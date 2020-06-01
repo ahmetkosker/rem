@@ -31,6 +31,11 @@ int main()
         printf("Test failed:5 tane + bulunmadı.\n");
         return -1;
     }
+    if (match_in_file(fopen(TEST_FILE, "r"), "i") != 44)
+    {
+        printf("Test failed:44 tane i bulunmadı.\n");
+        return -1;
+    }
 
     printf("All tests succesful.\n");
     return 0;
