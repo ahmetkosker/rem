@@ -15,9 +15,7 @@ unsigned int match_in_file(FILE *f, char *regex)
         if (automata_failed) //Yeni karakter okumuyoruz.
             automata_failed = 0;
         else
-        {
             next_char = fgetc(f); //Karakter okunuyor.
-        }
         for (i = 0; i < regex_len; i++)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
