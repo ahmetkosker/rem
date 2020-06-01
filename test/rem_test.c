@@ -15,7 +15,6 @@ int main()
         printf("Test failed:7 tane state bulunmadı.\n");
         return -1;
     }
-
     if (match_in_file(fopen(TEST_FILE, "r"), "regex_len") != 3)
     {
         printf("Test failed:3 tane regex_len bulunmadı.\n");
@@ -34,6 +33,16 @@ int main()
     if (match_in_file(fopen(TEST_FILE, "r"), "i") != 44)
     {
         printf("Test failed:44 tane i bulunmadı.\n");
+        return -1;
+    }
+    if (match_in_file(fopen(TEST_FILE, "r"), ".") != 10)
+    {
+        printf("Test failed:10 tane . bulunmadı.\n");
+        return -1;
+    }
+    if (match_in_file(fopen(TEST_FILE, "r"), "\n") != 45)
+    {
+        printf("Test failed:45 tane \n bulunmadı.\n");
         return -1;
     }
 
