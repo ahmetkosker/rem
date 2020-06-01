@@ -6,69 +6,38 @@ int search(FILE *f, char *word)
     int state = 0;
     int length = strlen(word);
     int i = 0;
-    int j = 0;
-    int z = 0;
     char character;
-    char character1;
     int count = 0;
     int x = 0;
-
-    while (!feof(f))
+    while (!feof(f)) //Dosya bitene kadar.
     {
-        character1 = fgetc(f);
-        z++;
-    }
-    int sum = 0;
-    fseek(f, 0, SEEK_SET);
-    while (!feof(f))
-    {
-        if (x)
+        if (x) //Yeni karakter okumuyoruz.
             x = 0;
         else
         {
-            character = fgetc(f);
-            j++;
+            character = fgetc(f); //Karakter okunuyor.
         }
-        if (state == length)
-        {
-            count++;
-            if (j - (length + 11) > 0 && z - j > 10)
-            {
-                fseek(f, j - (length + 11), SEEK_SET);
-                for (sum; sum < (length + 20); sum++)
-                {
-                    character1 = fgetc(f);
-                    printf("%c", character1);
-                }
-            }
-            else
-            {
-                int a = 0;
-                while ((word[a]) != '\0')
-                {
-                    printf("%c", word[a]);
-                    a++;
-                }
-            }
-            state = 0;
-        }
-
         for (i = 0; i < length; i++)
         {
-            if (state == i)
+            if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (word[i] == character)
+                if (word[i] == character) //Okunan karakter duruma bağlı harfe eşitse.
                 {
-                    state = i + 1;
+                    state = i + 1; //Bir sonraki harfe geçiyoruz.
                 }
                 else
                 {
-                    if (state != 0)
+                    if (state != 0) //Arka arkaya gelen aynı harfler için otomatının patlamasına karşı bunu yapıyoruz.
                         x = 1;
                     state = 0;
                 }
                 break;
             }
+        }
+        if (state == length) //Kelime bulunduysa.
+        {
+            count++;
+            state = 0;
         }
     }
     return count;
