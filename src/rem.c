@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-
+int kadar = 0;
 unsigned int match_in_file(FILE *f, char *regex)
 {
     unsigned int count = 0;
+    unsigned int where = 0;
     size_t regex_len = strlen(regex);
     char next_char;
     unsigned int automata_failed = 0;
@@ -15,7 +16,10 @@ unsigned int match_in_file(FILE *f, char *regex)
         if (automata_failed) //Yeni karakter okumuyoruz.
             automata_failed = 0;
         else
+        {
             next_char = fgetc(f); //Karakter okunuyor.
+            where++;
+        }
         for (i = 0; i < regex_len; i++)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
@@ -35,9 +39,24 @@ unsigned int match_in_file(FILE *f, char *regex)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
+            while (next_char != '\n')
+            {
+                fseek(f, -2, SEEK_CUR);
+                next_char = fgetc(f);
+            }
+            next_char = fgetc(f);
+            printf("%c", next_char);
+
+            while (next_char != '\n')
+            {
+                next_char = fgetc(f);
+                printf("%c", next_char);
+            }
+            fseek(f, where, SEEK_SET);
             count++;
             state = 0;
         }
     }
+
     return count;
 }

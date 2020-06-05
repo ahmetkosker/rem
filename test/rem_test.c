@@ -5,44 +5,39 @@
 int main()
 {
 
-    if (match_in_file(fopen(TEST_FILE, "r"), "automata_failed") != 4)
+    if (match_in_file(fopen(TEST_FILE, "r"), "count") != 3)
     {
-        printf("Test failed:4 tane automata failed bulunmadı.\n");
+        printf("Test failed:2 tane count bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "state") != 7)
+    if (match_in_file(fopen(TEST_FILE, "r"), "regex") != 6)
     {
-        printf("Test failed:7 tane state bulunmadı.\n");
+        printf("Test failed:6 tane regex bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "regex_len") != 3)
+    if (match_in_file(fopen(TEST_FILE, "r"), "while") != 3)
     {
-        printf("Test failed:3 tane regex_len bulunmadı.\n");
+        printf("Test failed:3 tane while bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "1") != 2)
+    if (match_in_file(fopen(TEST_FILE, "r"), "=") != 26)
     {
-        printf("Test failed:2 tane 1 bulunmadı.\n");
+        printf("Test failed:26 tane = bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "+") != 5)
+    if (match_in_file(fopen(TEST_FILE, "r"), "automata") != 5)
     {
-        printf("Test failed:5 tane + bulunmadı.\n");
+        printf("Test failed:5 tane automata bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "i") != 44)
+    if (match_in_file(fopen(TEST_FILE, "r"), "if") != 5)
     {
-        printf("Test failed:44 tane i bulunmadı.\n");
+        printf("Test failed:5 tane if bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), ".") != 10)
+    if (match_in_file(fopen(TEST_FILE, "r"), "else") != 2)
     {
-        printf("Test failed:10 tane . bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "\n") != 45)
-    {
-        printf("Test failed:45 tane \n bulunmadı.\n");
+        printf("Test failed:2 tane else bulunmadı.\n");
         return -1;
     }
 
