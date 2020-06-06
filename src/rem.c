@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-int kadar = 0;
 unsigned int match_in_file(FILE *f, char *regex)
 {
     unsigned int count = 0;
@@ -10,6 +9,7 @@ unsigned int match_in_file(FILE *f, char *regex)
     unsigned int automata_failed = 0;
     unsigned int state = 0;
     unsigned int i = 0;
+    int temp = 0;
 
     while (!feof(f)) //Dosya bitene kadar.
     {
@@ -19,6 +19,9 @@ unsigned int match_in_file(FILE *f, char *regex)
         {
             next_char = fgetc(f); //Karakter okunuyor.
             where++;
+            temp++;
+            if (next_char == '\n')
+                temp = 0;
         }
         for (i = 0; i < regex_len; i++)
         {
@@ -39,14 +42,7 @@ unsigned int match_in_file(FILE *f, char *regex)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
-            while (next_char != '\n')
-            {
-                fseek(f, -2, SEEK_CUR);
-                next_char = fgetc(f);
-            }
-            next_char = fgetc(f);
-            printf("%c", next_char);
-
+            fseek(f, -temp, SEEK_CUR);
             while (next_char != '\n')
             {
                 next_char = fgetc(f);
