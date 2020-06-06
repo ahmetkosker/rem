@@ -43,7 +43,7 @@ unsigned int match_in_file(FILE *f, char *regex)
         if (state == regex_len) //Kelime bulunduysa.
         {
             fseek(f, -temp, SEEK_CUR);
-            while (next_char != '\n')
+            while (next_char != '\n' && next_char != '\0')
             {
                 next_char = fgetc(f);
                 printf("%c", next_char);

@@ -43,6 +43,11 @@ int main()
         printf("Test failed:2 tane include bulunmadı.\n");
         return -1;
     }
+    if (match_in_file(fopen(TEST_FILE, "r"), "char") != 10)
+    {
+        printf("Test failed:10 tane char q; bulunmadı.\n");
+        return -1;
+    }
 
     printf("All tests succesful.\n");
     return 0;
