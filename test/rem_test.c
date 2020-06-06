@@ -10,14 +10,14 @@ int main()
         printf("Test failed:4 tane information bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "also") != 7)
+    if (match_in_file(fopen(TEST_FILE, "r"), "also") != 6)
     {
-        printf("Test failed:7 tane also bulunmadı.\n");
+        printf("Test failed:6 tane also bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "free") != 22)
+    if (match_in_file(fopen(TEST_FILE, "r"), "free") != 16)
     {
-        printf("Test failed:22 tane free bulunmadı.\n");
+        printf("Test failed:16 tane free bulunmadı.\n");
         return -1;
     }
 

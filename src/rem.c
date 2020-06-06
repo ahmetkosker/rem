@@ -49,7 +49,7 @@ unsigned int match_in_file(FILE *f, char *regex)
         if (state == regex_len) //Kelime bulunduysa.
         {
             i = 0;
-            printf("\e[94;1m%d\e[0m ", line_number);
+            printf("\e[94;1m%d\e[0m\t", line_number);
             fseek(f, -temp, SEEK_CUR);
             iter = temp - regex_len;
             temp1 = iter;
