@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../src/rem.c"
-#define TEST_FILE "src/rem.c"
+#define TEST_FILE "test/resources/example.txt"
 
 int main()
 {
