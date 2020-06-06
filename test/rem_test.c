@@ -5,47 +5,19 @@
 int main()
 {
 
-    if (match_in_file(fopen(TEST_FILE, "r"), "count") != 3)
+    if (match_in_file(fopen(TEST_FILE, "r"), "information") != 4)
     {
-        printf("Test failed:3 tane count bulunmadı.\n");
+        printf("Test failed:4 tane information bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "regex") != 6)
+    if (match_in_file(fopen(TEST_FILE, "r"), "also") != 7)
     {
-        printf("Test failed:6 tane regex bulunmadı.\n");
+        printf("Test failed:7 tane also bulunmadı.\n");
         return -1;
     }
-    if (match_in_file(fopen(TEST_FILE, "r"), "while") != 2)
+    if (match_in_file(fopen(TEST_FILE, "r"), "free") != 22)
     {
-        printf("Test failed:2 tane while bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "=") != 26)
-    {
-        printf("Test failed:26 tane = bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "automata") != 5)
-    {
-        printf("Test failed:5 tane automata bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "if") != 6)
-    {
-        printf("Test failed:6 tane if bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "else") != 2)
-    {
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "include") != 2)
-    {
-        printf("Test failed:2 tane include bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "char") != 10)
-    {
-        printf("Test failed:10 tane char q; bulunmadı.\n");
+        printf("Test failed:22 tane free bulunmadı.\n");
         return -1;
     }
 
