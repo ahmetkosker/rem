@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-unsigned int match_in_file(FILE *f, char *regex, unsigned int case_sensitive)
+enum mode
+{
+    case_sensitive,
+    case_insensitive
+};
+unsigned int
+match_in_file(FILE *f, char *regex, unsigned int mode)
 {
     unsigned int count = 0;
     unsigned int where = 0;
@@ -34,7 +40,7 @@ unsigned int match_in_file(FILE *f, char *regex, unsigned int case_sensitive)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (case_sensitive == 0)
+                if (mode)
                 {
                     if (next_char <= 90 && next_char >= 65)
                         temp_char = next_char + 32;
