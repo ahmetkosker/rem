@@ -5,8 +5,7 @@ enum mode
     case_sensitive,
     case_insensitive
 };
-unsigned int
-match_in_file(FILE *f, char *regex, unsigned int mode)
+int match_in_file(FILE *f, char *regex, unsigned int mode)
 {
     unsigned int count = 0;
     unsigned int where = 0;
@@ -42,11 +41,11 @@ match_in_file(FILE *f, char *regex, unsigned int mode)
             {
                 if (mode)
                 {
-                    if (next_char <= 90 && next_char >= 65)
-                        temp_char = next_char + 32;
-                    else if (next_char <= 122 && next_char >= 97)
-                        temp_char = next_char - 32;
-                    if (regex[i] == next_char || regex[i] == temp_char) //Okunan karakter duruma bağlı harfe eşitse.
+                    if (regex[i] <= 90 && regex[i] >= 65)
+                        temp_char = regex[i] + 32;
+                    else if (regex[i] <= 122 && regex[i] >= 97)
+                        temp_char = regex[i] - 32;
+                    if (next_char == regex[i] || temp_char == next_char) //Okunan karakter duruma bağlı harfe eşitse.
                     {
                         state = i + 1; //Bir sonraki harfe geçiyoruz.
                     }
@@ -59,7 +58,7 @@ match_in_file(FILE *f, char *regex, unsigned int mode)
                 }
                 else
                 {
-                    if (regex[i] == next_char) //Okunan karakter duruma bağlı harfe eşitse.
+                    if (next_char == regex[i]) //Okunan karakter duruma bağlı harfe eşitse.
                     {
                         state = i + 1; //Bir sonraki harfe geçiyoruz.
                     }
