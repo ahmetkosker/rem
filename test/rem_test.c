@@ -25,6 +25,16 @@ int main()
         printf("Test failed:435 tane the bulunmadı.\n");
         return -1;
     }
+    if (match_in_file(fopen(TEST_FILE, "r"), "a", case_insensitive) != 1750)
+    {
+        printf("Test failed:1750 tane a bulunmadı.\n");
+        return -1;
+    }
+    if (match_in_file(fopen(TEST_FILE, "r"), ".", case_insensitive) != 204)
+    {
+        printf("Test failed:204 tane . bulunmadı.\n");
+        return -1;
+    }
 
     printf("All tests succesful.\n");
     return 0;

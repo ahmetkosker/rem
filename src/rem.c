@@ -79,44 +79,15 @@ match_in_file(FILE *f, char *regex, unsigned int mode)
             int tempo = temp;
             printf("\e[94;1m%d\e[0m\t", line_number);
             fseek(f, -tempo, SEEK_CUR);
-            iter = temp - regex_len;
-            sum = iter;
             while (next_char != '\n' && next_char != '\0')
             {
-                if (i < iter)
-                {
-                    next_char = fgetc(f);
-                    printf("%c", next_char);
-                    i++;
-                }
-                else if (sum < temp)
-                {
-                    if (sum == iter)
-                    {
-                        next_char = fgetc(f);
-                        printf("\e[32;1m%c", next_char);
-                        sum++;
-                    }
-                    else if (sum == (temp - 1))
-                    {
-                        next_char = fgetc(f);
-                        printf("%c", next_char);
-                        next_char = fgetc(f);
-                        printf("\e[0m%c", next_char);
-                        sum = sum + 2;
-                    }
-                    else
-                    {
-                        next_char = fgetc(f);
-                        printf("%c", next_char);
-                        sum++;
-                    }
-                }
-                else
-                {
-                    next_char = fgetc(f);
-                    printf("%c", next_char);
-                }
+                if (i == (temp - regex_len))
+                    printf("\e[32m");
+                if (i == temp)
+                    printf("\e[0m");
+                next_char = fgetc(f);
+                printf("%c", next_char);
+                i++;
             }
             fseek(f, where, SEEK_SET);
             count++;
