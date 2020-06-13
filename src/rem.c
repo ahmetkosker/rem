@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
-enum mode
+unsigned char isflag(unsigned char flags, unsigned char index)
 {
-    case_sensitive,
-    case_insensitive
-};
-int match_in_file(FILE *f, char *regex, unsigned int mode)
+    unsigned char mask = 1 << (index - 1);
+    return flags & mask;
+}
+int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
 {
     unsigned int count = 0;
     unsigned int where = 0;
@@ -19,6 +19,7 @@ int match_in_file(FILE *f, char *regex, unsigned int mode)
     unsigned int line_number = 1;
     unsigned int iter = 0;
     unsigned int sum = 0;
+    unsigned char flag;
 
     while (!feof(f)) //Dosya bitene kadar.
     {
@@ -78,7 +79,7 @@ int match_in_file(FILE *f, char *regex, unsigned int mode)
             int tempo = temp;
             printf("\e[94;1m%d\e[0m\t", line_number);
             fseek(f, -tempo, SEEK_CUR);
-            while (next_char != '\n' && next_char != '\0')
+            while (next_char != '\n' && feof(f))
             {
                 if (i == (temp - regex_len))
                     printf("\e[32m");
