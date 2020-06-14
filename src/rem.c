@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include "options.h"
+
 unsigned char isflag(unsigned char flags, unsigned char index)
 {
     unsigned char mask = 1 << (index - 1);
@@ -40,13 +42,26 @@ int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (mode)
+                if (isflag(flags, 2))
                 {
                     if (regex[i] <= 90 && regex[i] >= 65)
                         temp_char = regex[i] + 32;
                     else if (regex[i] <= 122 && regex[i] >= 97)
                         temp_char = regex[i] - 32;
                     if (next_char == regex[i] || temp_char == next_char) //Okunan karakter duruma bağlı harfe eşitse.
+                    {
+                        state = i + 1; //Bir sonraki harfe geçiyoruz.
+                    }
+                    else
+                    {
+                        if (state != 0) //Arka arkaya gelen aynı harfler için automata'nın patlamasına karşı bunu yapıyoruz.
+                            automata_failed = 1;
+                        state = 0;
+                    }
+                }
+                else if (isflag(flags, 2) == 0)
+                {
+                    if (next_char == regex[i]) //Okunan karakter duruma bağlı harfe eşitse.
                     {
                         state = i + 1; //Bir sonraki harfe geçiyoruz.
                     }
@@ -75,21 +90,39 @@ int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
-            i = 0;
-            int tempo = temp;
-            printf("\e[94;1m%d\e[0m\t", line_number);
-            fseek(f, -tempo, SEEK_CUR);
-            while (next_char != '\n' && feof(f))
+            flag = isflag(flags, 1);
+            if (flag == 1)
             {
-                if (i == (temp - regex_len))
-                    printf("\e[32m");
-                if (i == temp)
-                    printf("\e[0m");
-                next_char = fgetc(f);
-                printf("%c", next_char);
-                i++;
+                i = 0;
+                temp;
+                if (isflag(flags, 3))
+                    printf("\e[94;1m%d\e[0m\t", line_number);
+                fseek(f, -temp, SEEK_CUR);
+                while (next_char != '\n' && feof(f))
+                {
+                    if (i == (temp - regex_len))
+                        printf("\e[32m");
+                    if (i == temp)
+                        printf("\e[0m");
+                    next_char = fgetc(f);
+                    printf("%c", next_char);
+                    i++;
+                }
+                fseek(f, where, SEEK_SET);
             }
-            fseek(f, where, SEEK_SET);
+            else
+            {
+                i = 0;
+                temp;
+                if (isflag(flags, 3))
+                    printf("%d", line_number);
+                while (next_char != '\n' && feof(f))
+                {
+                    next_char = fgetc(f);
+                    printf("%c", next_char);
+                    i++;
+                }
+            }
             count++;
             state = 0;
         }

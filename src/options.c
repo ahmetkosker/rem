@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-unsigned char flags()
+unsigned char isflags()
 {
     unsigned char Enable_Nothing = 0;
     unsigned char Enable_Color = 1;
