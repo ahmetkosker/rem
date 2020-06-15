@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "options.h"
 
 int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
 {
@@ -53,19 +54,6 @@ int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
                         state = 0;
                     }
                 }
-                else if (isflag(flags, 2) == 0)
-                {
-                    if (next_char == regex[i]) //Okunan karakter duruma bağlı harfe eşitse.
-                    {
-                        state = i + 1; //Bir sonraki harfe geçiyoruz.
-                    }
-                    else
-                    {
-                        if (state != 0) //Arka arkaya gelen aynı harfler için automata'nın patlamasına karşı bunu yapıyoruz.
-                            automata_failed = 1;
-                        state = 0;
-                    }
-                }
                 else
                 {
                     if (next_char == regex[i]) //Okunan karakter duruma bağlı harfe eşitse.
@@ -84,39 +72,32 @@ int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
-            flag = isflag(flags, ENABLE_COLOR);
-            if (flag == 1)
+            i = 0;
+            if (isflag(flags, ENABLE_LINE_NUMBER))
             {
-                i = 0;
-                temp;
-                if (isflag(flags, 3))
+                if (isflag(flags, ENABLE_COLOR))
                     printf("\e[94;1m%d\e[0m\t", line_number);
-                fseek(f, -temp, SEEK_CUR);
-                while (next_char != '\n' && feof(f))
-                {
-                    if (i == (temp - regex_len))
-                        printf("\e[32m");
-                    if (i == temp)
-                        printf("\e[0m");
-                    next_char = fgetc(f);
-                    printf("%c", next_char);
-                    i++;
-                }
-                fseek(f, where, SEEK_SET);
-            }
-            else
-            {
-                i = 0;
-                temp;
-                if (isflag(flags, 3))
+                else
                     printf("%d", line_number);
-                while (next_char != '\n' && feof(f))
-                {
-                    next_char = fgetc(f);
-                    printf("%c", next_char);
-                    i++;
-                }
             }
+            fseek(f, -temp, SEEK_CUR);
+            while (next_char != '\n' && next_char != '\0')
+            {
+                if (i == (temp - regex_len))
+                {
+                    if (isflag(flags, ENABLE_COLOR))
+                        printf("\e[32m");
+                }
+                if (i == temp)
+                {
+                    if (isflag(flags, ENABLE_COLOR))
+                        printf("\e[0m");
+                }
+                next_char = fgetc(f);
+                printf("%c", next_char);
+                i++;
+            }
+            fseek(f, where, SEEK_SET);
             count++;
             state = 0;
         }
