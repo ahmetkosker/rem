@@ -1,6 +1,6 @@
 #ifndef options.h
 #define options .h
 
-unsigned char isflags();
+unsigned char enable();
 
 #endif options.h
