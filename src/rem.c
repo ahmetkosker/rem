@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <options.h>
 
 int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
 {
