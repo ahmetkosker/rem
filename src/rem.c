@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "options.h"
+#include <options.h>
 
-unsigned char isflag(unsigned char flags, unsigned char index)
-{
-    unsigned char mask = 1 << (index - 1);
-    return flags & mask;
-}
 int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
 {
     unsigned int count = 0;
@@ -42,7 +37,7 @@ int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (isflag(flags, 2))
+                if (isflag(flags, ENABLE_CASE_SENSITIVE))
                 {
                     if (regex[i] <= 90 && regex[i] >= 65)
                         temp_char = regex[i] + 32;
@@ -90,7 +85,7 @@ int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
-            flag = isflag(flags, 1);
+            flag = isflag(flags, ENABLE_COLOR);
             if (flag == 1)
             {
                 i = 0;
