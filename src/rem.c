@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include "rem.h"
 #include "options.h"
 
-int match_in_file(FILE *f, char *regex, unsigned int mode, unsigned char flags)
+int match_in_file(FILE *f, char *regex, unsigned char flags)
 {
     unsigned int count = 0;
     unsigned int where = 0;

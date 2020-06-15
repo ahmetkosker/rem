@@ -1,41 +1,18 @@
 #include <stdio.h>
-#include "../src/rem.c"
+
+int match_in_file(FILE *, char *, unsigned char);
+unsigned char isflag(unsigned char, unsigned char);
+unsigned char ENABLE_NOTHING = 0;
+unsigned char ENABLE_COLOR = 1;
+unsigned char ENABLE_CASE_SENSITIVE = 2;
+unsigned char ENABLE_LINE_NUMBER = 4;
+
 #define TEST_FILE "test/resources/example.txt"
 
 int main()
 {
-
-    if (match_in_file(fopen(TEST_FILE, "r"), "information", case_insensitive) != 8)
-    {
-        printf("Test failed:4 tane information bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "also", case_insensitive) != 7)
-    {
-        printf("Test failed:7 tane also bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "free", case_sensitive) != 16)
-    {
-        printf("Test failed:16 tane free bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "the", case_insensitive) != 435)
-    {
-        printf("Test failed:435 tane the bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), "a", case_insensitive) != 1886)
-    {
-        printf("Test failed:1886 tane a bulunmadı.\n");
-        return -1;
-    }
-    if (match_in_file(fopen(TEST_FILE, "r"), ".", case_insensitive) != 204)
-    {
-        printf("Test failed:204 tane . bulunmadı.\n");
-        return -1;
-    }
-
-    printf("All tests succesful.\n");
+    unsigned char flags = ENABLE_NOTHING;
+    int count = match_in_file(fopen(TEST_FILE, "r"), "information", flags);
+    printf("%d", count);
     return 0;
 }
