@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "../src/rem.h"
 #include "../src/options.h"
-
 #define TEST_FILE "test/resources/example.txt"
 
 int main()
