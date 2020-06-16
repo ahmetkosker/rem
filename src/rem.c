@@ -74,6 +74,7 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
         if (state == regex_len) //Kelime bulunduysa.
         {
             i = 0;
+            int tempo = temp;
             if (isflag(flags, ENABLE_LINE_NUMBER))
             {
                 if (isflag(flags, ENABLE_COLOR))
@@ -81,8 +82,8 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
                 else
                     printf("%d", line_number);
             }
-            fseek(f, -temp, SEEK_CUR);
-            while (next_char != '\n' && next_char != '\0')
+            fseek(f, -tempo, SEEK_CUR);
+            while (next_char != '\n' && !feof(f))
             {
                 if (i == (temp - regex_len))
                 {
