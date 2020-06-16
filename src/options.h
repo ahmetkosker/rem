@@ -1,5 +1,5 @@
-#ifndef REM_OPTIONS_H
-#define REM_OPTIONS_H
+#ifndef _REM_OPTIONS_H
+#define _REM_OPTIONS_H
 
 unsigned char isflag(unsigned char, unsigned char);
 static unsigned char ENABLE_NOTHING = 0;
