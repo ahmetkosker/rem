@@ -13,7 +13,7 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
     unsigned int automata_failed = 0;
     unsigned int state = 0;
     unsigned int i = 0;
-    unsigned int temp = 0;
+    int temp = 0;
     unsigned int line_number = 1;
     unsigned int iter = 0;
     unsigned int sum = 0;
@@ -74,7 +74,6 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
         if (state == regex_len) //Kelime bulunduysa.
         {
             i = 0;
-            int tempo = temp;
             if (isflag(flags, ENABLE_LINE_NUMBER))
             {
                 if (isflag(flags, ENABLE_COLOR))
@@ -82,7 +81,7 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
                 else
                     printf("%d", line_number);
             }
-            fseek(f, -tempo, SEEK_CUR);
+            fseek(f, -temp, SEEK_CUR);
             while (next_char != '\n' && !feof(f))
             {
                 if (i == (temp - regex_len))
