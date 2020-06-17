@@ -12,6 +12,10 @@ void callback(char *filepath)
 
 int main()
 {
-    walkindir("/home/ahmet/playground/jtooltarrak", &callback);
+#ifdef REM_TEST_DIR
+    walkindir(REM_TEST_DIR, &callback);
+#else
+    printf("Test directory is not given.\n");
+#endif
     return 0;
 }
