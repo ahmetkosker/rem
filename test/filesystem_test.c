@@ -2,7 +2,6 @@
 #include "../src/filesystem.h"
 #include "../src/rem.h"
 #include "../src/options.h"
-
 void callback(char *filepath)
 {
     unsigned char flags = ENABLE_NOTHING | ENABLE_COLOR | ENABLE_LINE_NUMBER;
