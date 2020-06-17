@@ -4,9 +4,13 @@
 #include "../src/options.h"
 void callback(char *filepath)
 {
+#ifdef REM_TEST_REGEX
     unsigned char flags = ENABLE_NOTHING | ENABLE_COLOR | ENABLE_LINE_NUMBER;
-    int count = match_in_file(filepath, "\"", flags);
-    printf("%s dosyasında %d kadar \" vardır.\n  ", filepath, count);
+    int count = match_in_file(filepath, REM_TEST_REGEX, flags);
+    printf("%s dosyasında %d adet vardır.\n", filepath, count);
+#else
+    printf("%s\n", filepath);
+#endif
 }
 
 int main()
