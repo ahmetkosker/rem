@@ -83,7 +83,7 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
                     printf("%d  ", line_number);
             }
             fseek(f, -temp, SEEK_CUR);
-            while (next_char != '\n' && !feof(f))
+            while (next_char != '\n')
             {
                 if (i == (temp - regex_len))
                 {
@@ -96,6 +96,11 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
                         printf("\e[0m");
                 }
                 next_char = fgetc(f);
+                if (feof(f))
+                {
+                    printf("\n");
+                    break;
+                }
                 printf("%c", next_char);
                 i++;
             }
