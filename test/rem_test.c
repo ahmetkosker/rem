@@ -6,7 +6,7 @@
 int main()
 {
     unsigned char flags = ENABLE_COLOR | ENABLE_LINE_NUMBER;
-    int count = match_in_file(fopen(TEST_FILE, "r"), "information", flags);
+    int count = match_in_file(TEST_FILE, "information", flags);
     printf("%d", count);
     return 0;
 }

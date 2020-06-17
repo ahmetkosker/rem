@@ -3,8 +3,9 @@
 #include "rem.h"
 #include "options.h"
 
-int match_in_file(FILE *f, char *regex, unsigned char flags)
+int match_in_file(char *filepath, char *regex, unsigned char flags)
 {
+    FILE *f = fopen(filepath, "r");
     unsigned int count = 0;
     unsigned int where = 0;
     size_t regex_len = strlen(regex);
@@ -38,7 +39,7 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
         {
             if (state == i) //En son kaldığımız harfe geliyoruz.
             {
-                if (isflag(flags, ENABLE_CASE_SENSITIVE))
+                if (!isflag(flags, ENABLE_CASE_SENSITIVE))
                 {
                     if (regex[i] <= 90 && regex[i] >= 65)
                         temp_char = regex[i] + 32;
@@ -79,7 +80,7 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
                 if (isflag(flags, ENABLE_COLOR))
                     printf("\e[94;1m%d\e[0m\t", line_number);
                 else
-                    printf("%d", line_number);
+                    printf("%d  ", line_number);
             }
             fseek(f, -temp, SEEK_CUR);
             while (next_char != '\n' && !feof(f))
@@ -87,7 +88,7 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
                 if (i == (temp - regex_len))
                 {
                     if (isflag(flags, ENABLE_COLOR))
-                        printf("\e[32m");
+                        printf("\e[32;1m");
                 }
                 if (i == temp)
                 {
@@ -103,5 +104,6 @@ int match_in_file(FILE *f, char *regex, unsigned char flags)
             state = 0;
         }
     }
+    fclose(f);
     return count;
 }
