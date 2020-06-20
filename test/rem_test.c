@@ -6,7 +6,7 @@ int main()
 {
 #ifdef REM_TEST_FILE
 #ifdef REM_TEST_REGEX
-    unsigned char flags = ENABLE_COLOR | ENABLE_LINE_NUMBER;
+    unsigned char flags = ENABLE_COLOR | ENABLE_LINE_NUMBER | ENABLE_WORD;
     int count = match_in_file(REM_TEST_FILE, REM_TEST_REGEX, flags);
 #else
     printf("Regex is not given.\n");
@@ -16,4 +16,3 @@ int main()
 #endif
     return 0;
 }
-#define Ahmet

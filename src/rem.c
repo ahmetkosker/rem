@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "rem.h"
 #include "options.h"
 
@@ -10,11 +11,23 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
     unsigned int where = 0;
     size_t regex_len = strlen(regex);
     char next_char;
+    if (isflag(flags, ENABLE_WORD))
+    {
+				char *temp = malloc(regex_len + 3);
+				temp[0] = ' ';
+				int i;
+				for(i = 0; i < regex_len; i++)
+					temp[i+1] = regex[i];
+				temp[regex_len + 1] = ' ';
+				temp[regex_len + 2] = 0;
+				regex = temp;
+				regex_len += 2;
+    }
     int temp_char = 0;
     unsigned int automata_failed = 0;
     unsigned int state = 0;
     unsigned int i = 0;
-    int temp = 0;
+    int temp = 0 ;
     unsigned int line_number = 1;
     unsigned int iter = 0;
     unsigned int sum = 0;
@@ -109,6 +122,7 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
             state = 0;
         }
     }
+		free(regex);
     fclose(f);
     return count;
 }
