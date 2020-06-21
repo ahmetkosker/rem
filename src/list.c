@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "list.h"
 
 node *list_new(int first_value)
@@ -31,13 +32,13 @@ int list_get(node *start, unsigned int index)
     int size = list_size(start);
     if (index > size)
     {
-        printf("Gecersiz sayi");
+        printf("Gecersiz sayi ");
         return 0;
     }
     else
     {
         int i;
-        for (i = 1; i < index; i++)
+        for (i = 0; i < index; i++)
             temp = temp->next;
         return (temp->data);
     }
@@ -50,7 +51,7 @@ node *list_add(node *start, unsigned int index, int value)
     node *temp = start;
     if (index > size)
     {
-        printf("Gecersiz sayi");
+        printf("Gecersiz sayi ");
         return NULL;
     }
     else
@@ -81,7 +82,7 @@ node *list_remove(node *start, unsigned int index)
     node *temp = start;
     if (index > size)
     {
-        printf("Gecersiz sayi");
+        printf("Gecersiz sayi\n");
         return NULL;
     }
     else
@@ -89,18 +90,18 @@ node *list_remove(node *start, unsigned int index)
         int i;
         if (index != 0)
         {
-            for (i = 1; i < index - 1; i++)
+            for (i = 1; i < index; i++)
                 temp = temp->next;
+            node *iter = temp->next;
             temp->next = temp->next->next;
-            free(temp->next);
-            return start;
+            free(iter);
         }
         else
         {
             start = start->next;
             free(temp);
-            return start;
         }
+        return start;
     }
 }
 
@@ -118,10 +119,12 @@ void list_push(node *start, int value)
 int list_pop(node *start)
 {
     node *temp = start;
-    while (temp->next != NULL)
+    while (temp->next->next != NULL)
         temp = temp->next;
-    int value = temp->data;
-    free(temp);
+    node *iter = temp->next;
+    int value = iter->data;
+    free(iter);
+    temp->next = NULL;
     return value;
 }
 
@@ -129,18 +132,19 @@ void list_print(node *start)
 {
     node *temp = start;
     if (start == NULL)
-        return;
+        printf("Liste bos");
     else
     {
-        while (temp->next != NULL)
+        while (temp != NULL)
         {
             printf("%d ", temp->data);
             temp = temp->next;
         }
     }
+    printf("\n");
 }
 
-void list_free(node *start)
+node *list_free(node *start)
 {
     node *temp = start;
     node *iter = start;
@@ -150,4 +154,5 @@ void list_free(node *start)
         free(iter);
         iter = temp;
     }
+    return NULL;
 }
