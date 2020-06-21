@@ -1,22 +1,22 @@
 #include <stdlib.h>
-#include "list.h"
+#include "int_list.h"
 
-node *list_new(int first_value)
+int_n *list_new(int first_value)
 {
-    node *root = (node *)malloc(sizeof(node));
+    int_n *root = (int_n *)malloc(sizeof(int_n));
     root->data = first_value;
     root->next = NULL;
     return root;
 }
 
-unsigned int list_size(node *start)
+unsigned int list_size(int_n *root)
 {
-    if (start == NULL)
+    if (root == NULL)
         return 0;
     else
     {
         int size = 1;
-        node *temp = start;
+        int_n *temp = root;
         while (temp->next != NULL)
         {
             temp = temp->next;
@@ -26,10 +26,10 @@ unsigned int list_size(node *start)
     }
 }
 
-int list_get(node *start, unsigned int index)
+int list_get(int_n *root, unsigned int index)
 {
-    node *temp = start;
-    int size = list_size(start);
+    int_n *temp = root;
+    int size = list_size(root);
     if (index > size)
     {
         printf("Gecersiz sayi ");
@@ -44,11 +44,11 @@ int list_get(node *start, unsigned int index)
     }
 }
 
-node *list_add(node *start, unsigned int index, int value)
+int_n *list_add(int_n *root, unsigned int index, int value)
 {
-    int size = list_size(start);
-    node *iter = (node *)malloc(sizeof(node));
-    node *temp = start;
+    int size = list_size(root);
+    int_n *iter = (int_n *)malloc(sizeof(int_n));
+    int_n *temp = root;
     if (index > size)
     {
         printf("Gecersiz sayi ");
@@ -64,22 +64,22 @@ node *list_add(node *start, unsigned int index, int value)
             iter->data = value;
             iter->next = temp->next;
             temp->next = iter;
-            return start;
+            return root;
         }
         else
         {
             iter->data = value;
-            iter->next = start;
-            start = iter;
-            return start;
+            iter->next = root;
+            root = iter;
+            return root;
         }
     }
 }
 
-node *list_remove(node *start, unsigned int index)
+int_n *list_remove(int_n *root, unsigned int index)
 {
-    int size = list_size(start);
-    node *temp = start;
+    int size = list_size(root);
+    int_n *temp = root;
     if (index > size)
     {
         printf("Gecersiz sayi\n");
@@ -92,46 +92,46 @@ node *list_remove(node *start, unsigned int index)
         {
             for (i = 1; i < index; i++)
                 temp = temp->next;
-            node *iter = temp->next;
+            int_n *iter = temp->next;
             temp->next = temp->next->next;
             free(iter);
         }
         else
         {
-            start = start->next;
+            root = root->next;
             free(temp);
         }
-        return start;
+        return root;
     }
 }
 
-void list_push(node *start, int value)
+void list_push(int_n *root, int value)
 {
-    node *temp = start;
+    int_n *temp = root;
     while (temp->next != NULL)
         temp = temp->next;
-    temp->next = (node *)malloc(sizeof(node));
+    temp->next = (int_n *)malloc(sizeof(int_n));
     temp = temp->next;
     temp->data = value;
     temp->next = NULL;
 }
 
-int list_pop(node *start)
+int list_pop(int_n *root)
 {
-    node *temp = start;
+    int_n *temp = root;
     while (temp->next->next != NULL)
         temp = temp->next;
-    node *iter = temp->next;
+    int_n *iter = temp->next;
     int value = iter->data;
     free(iter);
     temp->next = NULL;
     return value;
 }
 
-void list_print(node *start)
+void list_print(int_n *root)
 {
-    node *temp = start;
-    if (start == NULL)
+    int_n *temp = root;
+    if (root == NULL)
         printf("Liste bos");
     else
     {
@@ -144,10 +144,10 @@ void list_print(node *start)
     printf("\n");
 }
 
-node *list_free(node *start)
+int_n *list_free(int_n *root)
 {
-    node *temp = start;
-    node *iter = start;
+    int_n *temp = root;
+    int_n *iter = root;
     while (temp != NULL)
     {
         temp = temp->next;

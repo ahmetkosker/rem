@@ -1,10 +1,10 @@
-#include "../src/list.h"
+#include "../src/int_list.h"
 
 int main()
 {
 	printf("15 added.\n");
 	printf("List: ");
-	node *root = list_new(15);
+	int_n *root = list_new(15);
 	list_print(root);
 	printf("7 added.\n");
 	printf("List: ");
