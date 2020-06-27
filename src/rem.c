@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "rem.h"
 #include "options.h"
+#include "int_list.h"
 
 int match_in_file(char *filepath, char *regex, unsigned char flags)
 {
@@ -13,21 +14,21 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
     char next_char;
     if (isflag(flags, ENABLE_WORD))
     {
-				char *temp = malloc(regex_len + 3);
-				temp[0] = ' ';
-				int i;
-				for(i = 0; i < regex_len; i++)
-					temp[i+1] = regex[i];
-				temp[regex_len + 1] = ' ';
-				temp[regex_len + 2] = 0;
-				regex = temp;
-				regex_len += 2;
+        char *temp = malloc(regex_len + 3);
+        temp[0] = ' ';
+        int i;
+        for (i = 0; i < regex_len; i++)
+            temp[i + 1] = regex[i];
+        temp[regex_len + 1] = ' ';
+        temp[regex_len + 2] = 0;
+        regex = temp;
+        regex_len += 2;
     }
     int temp_char = 0;
     unsigned int automata_failed = 0;
     unsigned int state = 0;
     unsigned int i = 0;
-    int temp = 0 ;
+    int temp = 0;
     unsigned int line_number = 1;
     unsigned int iter = 0;
     unsigned int sum = 0;
@@ -87,42 +88,76 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
-            i = 0;
-            if (isflag(flags, ENABLE_LINE_NUMBER))
-            {
-                if (isflag(flags, ENABLE_COLOR))
-                    printf("\e[94;1m%d\e[0m\t", line_number);
-                else
-                    printf("%d  ", line_number);
-            }
-            fseek(f, -temp, SEEK_CUR);
-            while (next_char != '\n')
-            {
-                if (i == (temp - regex_len))
-                {
-                    if (isflag(flags, ENABLE_COLOR))
-                        printf("\e[32;1m");
-                }
-                if (i == temp)
-                {
-                    if (isflag(flags, ENABLE_COLOR))
-                        printf("\e[0m");
-                }
-                next_char = fgetc(f);
-                if (feof(f))
-                {
-                    printf("\n");
-                    break;
-                }
-                printf("%c", next_char);
-                i++;
-            }
-            fseek(f, where, SEEK_SET);
             count++;
             state = 0;
         }
     }
-		free(regex);
+    free(regex);
     fclose(f);
     return count;
+}
+
+void print_line_number(unsigned int line_number)
+{
+    printf("%d ", line_number);
+}
+
+void print_file_name(char *fname)
+{
+    printf("%s:", fname);
+}
+
+void print_between(FILE *f, int line_number, int char_begin, int char_end)
+{
+    fseek(f, 0, SEEK_SET);
+    char next_char;
+    while (line_number != 0)
+    {
+        next_char = fgetc(f);
+        while (next_char != '\n')
+            next_char = fgetc(f);
+        line_number--;
+    }
+    next_char = 0;
+    fseek(f, char_begin, SEEK_CUR);
+    while ((char_end == -1 && next_char != '\n') || (char_begin <= char_end))
+    {
+        next_char = fgetc(f);
+        printf("%c", next_char);
+        char_begin++;
+    }
+}
+
+void print_matches(FILE *f, int_n *root, char *filepath)
+{
+    if (root == NULL)
+        return;
+    int i = 0;
+    unsigned int line_number = 0;
+    unsigned int char_begin = 0;
+    int size = list_size(root);
+    for (i; i < size; i++)
+    {
+        if (list_get(root, i) == -1)
+        {
+            if (i != 0)
+                print_between(f, line_number, char_begin, -1);
+            printf("\n");
+            if (i == size - 1)
+                return;
+            char_begin = 0;
+            i = i + 1;
+            line_number = list_get(root, i);
+            print_file_name(filepath);
+            print_line_number(line_number);
+            continue;
+        }
+        print_between(f, line_number, char_begin, list_get(root, i));
+        char_begin = list_get(root, i);
+        printf("\e[32;1m");
+        print_between(f, line_number, char_begin, list_get(root, i + 1));
+        printf("\e[0m");
+        char_begin = list_get(root, i + 1);
+        i = i + 1;
+    }
 }

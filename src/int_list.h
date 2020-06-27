@@ -1,3 +1,6 @@
+#ifndef REM_INT_LIST_H
+#define REM_INT_LIST_H
+
 #include <stdio.h>
 
 struct int_n
@@ -16,3 +19,5 @@ void list_push(int_n *root, int value);
 int list_pop(int_n *root);
 void list_print(int_n *root);
 int_n *list_free(int_n *root);
+
+#endif

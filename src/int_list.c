@@ -37,8 +37,8 @@ int list_get(int_n *root, unsigned int index)
     }
     else
     {
-        int i;
-        for (i = 0; i < index; i++)
+        int j;
+        for (j = 0; j < index; j++)
             temp = temp->next;
         return (temp->data);
     }
