@@ -105,15 +105,23 @@ int_n *list_remove(int_n *root, unsigned int index)
     }
 }
 
-void list_push(int_n *root, int value)
+int_n *list_push(int_n *root, int value)
 {
     int_n *temp = root;
+    if (root == NULL)
+    {
+        root = (int_n *)malloc(sizeof(int_n));
+        root->data = value;
+        root->next = NULL;
+        return root;
+    }
     while (temp->next != NULL)
         temp = temp->next;
     temp->next = (int_n *)malloc(sizeof(int_n));
     temp = temp->next;
     temp->data = value;
     temp->next = NULL;
+    return root;
 }
 
 int list_pop(int_n *root)

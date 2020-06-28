@@ -8,6 +8,7 @@
 int match_in_file(char *filepath, char *regex, unsigned char flags)
 {
     FILE *f = fopen(filepath, "r");
+    int_n *list = NULL;
     unsigned int count = 0;
     unsigned int where = 0;
     size_t regex_len = strlen(regex);
@@ -29,10 +30,12 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
     unsigned int state = 0;
     unsigned int i = 0;
     int temp = 0;
-    unsigned int line_number = 1;
+    int temp_line_number = 0;
+    unsigned int line_number = 0;
     unsigned int iter = 0;
     unsigned int sum = 0;
     unsigned char flag;
+    unsigned int state_line_number = 1;
 
     while (!feof(f)) //Dosya bitene kadar.
     {
@@ -88,23 +91,44 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
         }
         if (state == regex_len) //Kelime bulunduysa.
         {
+            if (line_number == 0)
+            {
+                if (state_line_number)
+                {
+                    list = list_push(list, -1);
+                    list = list_push(list, line_number);
+                    state_line_number = 0;
+                }
+            }
+            if (temp_line_number != line_number)
+            {
+                list = list_push(list, -1);
+                list = list_push(list, line_number);
+                temp_line_number = line_number;
+            }
+            list = list_push(list, (temp)-regex_len);
+            list = list_push(list, temp);
             count++;
             state = 0;
         }
     }
-    free(regex);
+    list = list_push(list, -1);
+    list_print(list);
+    printf("\n");
+    print_matches(f, list, "/home/ahmet/projects/rem/ahmet.txt");
+    list_free(list);
     fclose(f);
     return count;
 }
 
 void print_line_number(unsigned int line_number)
 {
-    printf("%d ", line_number);
+    printf("%d: ", line_number);
 }
 
 void print_file_name(char *fname)
 {
-    printf("%s:", fname);
+    printf("%s: ", fname);
 }
 
 void print_between(FILE *f, int line_number, int char_begin, int char_end)
@@ -120,7 +144,7 @@ void print_between(FILE *f, int line_number, int char_begin, int char_end)
     }
     next_char = 0;
     fseek(f, char_begin, SEEK_CUR);
-    while ((char_end == -1 && next_char != '\n') || (char_begin <= char_end))
+    while ((char_end == -1 && next_char != '\n') || (char_begin + 1 <= char_end))
     {
         next_char = fgetc(f);
         printf("%c", next_char);
