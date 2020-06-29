@@ -16,10 +16,9 @@ unsigned int list_size(int_n *root)
     else
     {
         int size = 1;
-        int_n *temp = root;
-        while (temp->next != NULL)
+        while (root->next != NULL)
         {
-            temp = temp->next;
+            root = root->next;
             size++;
         }
         return size;
@@ -28,7 +27,6 @@ unsigned int list_size(int_n *root)
 
 int list_get(int_n *root, unsigned int index)
 {
-    int_n *temp = root;
     int size = list_size(root);
     if (index > size)
     {
@@ -39,8 +37,8 @@ int list_get(int_n *root, unsigned int index)
     {
         int j;
         for (j = 0; j < index; j++)
-            temp = temp->next;
-        return (temp->data);
+            root = root->next;
+        return (root->data);
     }
 }
 
@@ -126,27 +124,25 @@ int_n *list_push(int_n *root, int value)
 
 int list_pop(int_n *root)
 {
-    int_n *temp = root;
-    while (temp->next->next != NULL)
-        temp = temp->next;
-    int_n *iter = temp->next;
+    while (root->next->next != NULL)
+        root = root->next;
+    int_n *iter = root->next;
     int value = iter->data;
     free(iter);
-    temp->next = NULL;
+    root->next = NULL;
     return value;
 }
 
 void list_print(int_n *root)
 {
-    int_n *temp = root;
     if (root == NULL)
         printf("Liste bos");
     else
     {
-        while (temp != NULL)
+        while (root != NULL)
         {
-            printf("%d ", temp->data);
-            temp = temp->next;
+            printf("%d ", root->data);
+            root = root->next;
         }
     }
     printf("\n");
@@ -154,13 +150,12 @@ void list_print(int_n *root)
 
 int_n *list_free(int_n *root)
 {
-    int_n *temp = root;
     int_n *iter = root;
-    while (temp != NULL)
+    while (root != NULL)
     {
-        temp = temp->next;
+        root = root->next;
         free(iter);
-        iter = temp;
+        iter = root;
     }
     return NULL;
 }

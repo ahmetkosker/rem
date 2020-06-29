@@ -12,17 +12,18 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
     unsigned int count = 0;
     unsigned int where = 0;
     size_t regex_len = strlen(regex);
+    char *temp_p = NULL;
     char next_char;
     if (isflag(flags, ENABLE_WORD))
     {
-        char *temp = malloc(regex_len + 3);
-        temp[0] = ' ';
+        temp_p = malloc(regex_len + 3);
+        temp_p[0] = ' ';
         int i;
         for (i = 0; i < regex_len; i++)
-            temp[i + 1] = regex[i];
-        temp[regex_len + 1] = ' ';
-        temp[regex_len + 2] = 0;
-        regex = temp;
+            temp_p[i + 1] = regex[i];
+        temp_p[regex_len + 1] = ' ';
+        temp_p[regex_len + 2] = 0;
+        regex = temp_p;
         regex_len += 2;
     }
     int temp_char = 0;
@@ -115,8 +116,10 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
     list = list_push(list, -1);
     list_print(list);
     printf("\n");
-    print_matches(f, list, "/home/ahmet/projects/rem/ahmet.txt");
+    print_matches(f, list, filepath);
     list_free(list);
+    if (temp_p != NULL)
+        free(temp_p);
     fclose(f);
     return count;
 }
@@ -144,7 +147,7 @@ void print_between(FILE *f, int line_number, int char_begin, int char_end)
     }
     next_char = 0;
     fseek(f, char_begin, SEEK_CUR);
-    while ((char_end == -1 && next_char != '\n') || (char_begin + 1 <= char_end))
+    while (char_end == -1 && next_char != '\n' || (char_begin + 1 <= char_end))
     {
         next_char = fgetc(f);
         printf("%c", next_char);
@@ -157,6 +160,9 @@ void print_matches(FILE *f, int_n *root, char *filepath)
     if (root == NULL)
         return;
     int i = 0;
+    int a = 2;
+    int b = 2;
+    unsigned int temp;
     unsigned int line_number = 0;
     unsigned int char_begin = 0;
     int size = list_size(root);
@@ -165,13 +171,36 @@ void print_matches(FILE *f, int_n *root, char *filepath)
         if (list_get(root, i) == -1)
         {
             if (i != 0)
+            {
                 print_between(f, line_number, char_begin, -1);
+                temp = line_number + a;
+                line_number++;
+                while (line_number <= temp)
+                {
+                    print_file_name(filepath);
+                    print_line_number(line_number);
+                    print_between(f, line_number, 0, -1);
+                    line_number++;
+                }
+                line_number = temp - a - 1;
+            }
             printf("\n");
             if (i == size - 1)
                 return;
             char_begin = 0;
             i = i + 1;
             line_number = list_get(root, i);
+            if (line_number > b)
+            {
+                temp = line_number - b;
+                while (temp < line_number)
+                {
+                    print_file_name(filepath);
+                    print_line_number(temp);
+                    print_between(f, temp, char_begin, -1);
+                    temp++;
+                }
+            }
             print_file_name(filepath);
             print_line_number(line_number);
             continue;
