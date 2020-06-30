@@ -2,11 +2,12 @@
 #define _REM_REM_H
 #include <stdio.h>
 #include "int_list.h"
+#include "options.h"
 
-int match_in_file(char *filepath, char *regex, unsigned char flags);
+int match_in_file(char *filepath, char *regex, unsigned char flags, options option);
 void print_line_number(unsigned int line_number);
 void print_file_name(char *fname);
 void print_between(FILE *f, int line_number, int char_begin, int char_end);
-void print_matches(FILE *f, int_n *root, char *fname);
+void print_matches(FILE *f, int_n *root, char *fname, options option);
 
 #endif

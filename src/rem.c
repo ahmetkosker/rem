@@ -5,7 +5,7 @@
 #include "options.h"
 #include "int_list.h"
 
-int match_in_file(char *filepath, char *regex, unsigned char flags)
+int match_in_file(char *filepath, char *regex, unsigned char flags, options option)
 {
     FILE *f = fopen(filepath, "r");
     int_n *list = NULL;
@@ -116,7 +116,7 @@ int match_in_file(char *filepath, char *regex, unsigned char flags)
     list = list_push(list, -1);
     list_print(list);
     printf("\n");
-    print_matches(f, list, filepath);
+    print_matches(f, list, filepath, option);
     list_free(list);
     if (temp_p != NULL)
         free(temp_p);
@@ -155,17 +155,20 @@ void print_between(FILE *f, int line_number, int char_begin, int char_end)
     }
 }
 
-void print_matches(FILE *f, int_n *root, char *filepath)
+void print_matches(FILE *f, int_n *root, char *filepath, options option)
 {
     if (root == NULL)
         return;
     int i = 0;
-    int a = 2;
-    int b = 2;
     unsigned int temp;
     unsigned int line_number = 0;
     unsigned int char_begin = 0;
     int size = list_size(root);
+    if (option.c != 0)
+    {
+        option.a = option.c;
+        option.b = option.c;
+    }
     for (i; i < size; i++)
     {
         if (list_get(root, i) == -1)
@@ -173,7 +176,7 @@ void print_matches(FILE *f, int_n *root, char *filepath)
             if (i != 0)
             {
                 print_between(f, line_number, char_begin, -1);
-                temp = line_number + a;
+                temp = line_number + option.a;
                 line_number++;
                 while (line_number <= temp)
                 {
@@ -182,7 +185,7 @@ void print_matches(FILE *f, int_n *root, char *filepath)
                     print_between(f, line_number, 0, -1);
                     line_number++;
                 }
-                line_number = temp - a - 1;
+                line_number = temp - option.a - 1;
             }
             printf("\n");
             if (i == size - 1)
@@ -190,9 +193,9 @@ void print_matches(FILE *f, int_n *root, char *filepath)
             char_begin = 0;
             i = i + 1;
             line_number = list_get(root, i);
-            if (line_number > b)
+            if (line_number > option.b)
             {
-                temp = line_number - b;
+                temp = line_number - option.b;
                 while (temp < line_number)
                 {
                     print_file_name(filepath);
