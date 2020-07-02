@@ -2,22 +2,18 @@
 #include "../src/rem.h"
 #include "../src/options.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-    //#ifdef REM_TEST_FILE
-    //#ifdef REM_TEST_REGEX
-    //unsigned char flags = ENABLE_COLOR | ENABLE_LINE_NUMBER | ENABLE_WORD;
+
+    unsigned char flags = ENABLE_COLOR | ENABLE_LINE_NUMBER | ENABLE_WORD;
     options option;
-    //option.a = 3;
-    //option.b = 2;
-    option.c = 5;
-    match_in_file("/home/ahmet/projects/c/rem/LICENSE", "the", 0, option);
-    //int count = match_in_file(REM_TEST_FILE, REM_TEST_REGEX, flags);
-    //#else
-    //    printf("Regex is not given.\n");
-    //#endif
-    //#else
-    //   printf("Test file is not given.\n");
-    //#endif
+    char *b = argv[3];
+    char *a = argv[4];
+    char *c = argv[5];
+    option.b = b[0] - 48;
+    option.a = a[0] - 48;
+    option.c = c[0] - 48;
+    match_in_file(argv[1], argv[2], 0, option);
+
     return 0;
 }

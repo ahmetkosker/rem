@@ -176,32 +176,40 @@ void print_matches(FILE *f, int_n *root, char *filepath, options option)
             if (i != 0)
             {
                 print_between(f, line_number, char_begin, -1);
-                temp = line_number + option.a;
-                line_number++;
-                while (line_number <= temp)
+                if (option.a != 0)
                 {
-                    print_file_name(filepath);
-                    print_line_number(line_number);
-                    print_between(f, line_number, 0, -1);
+                    temp = line_number + option.a;
                     line_number++;
+                    while (line_number <= temp)
+                    {
+                        print_file_name(filepath);
+                        print_line_number(line_number);
+                        print_between(f, line_number, 0, -1);
+                        line_number++;
+                    }
+                    line_number = temp - option.a - 1;
                 }
-                line_number = temp - option.a - 1;
             }
             printf("\n");
+            printf(">>>>");
+            printf("\n\n");
             if (i == size - 1)
                 return;
             char_begin = 0;
             i = i + 1;
             line_number = list_get(root, i);
-            if (line_number > option.b)
+            if (option.b != 0)
             {
-                temp = line_number - option.b;
-                while (temp < line_number)
+                if (line_number > option.b)
                 {
-                    print_file_name(filepath);
-                    print_line_number(temp);
-                    print_between(f, temp, char_begin, -1);
-                    temp++;
+                    temp = line_number - option.b;
+                    while (temp < line_number)
+                    {
+                        print_file_name(filepath);
+                        print_line_number(temp);
+                        print_between(f, temp, char_begin, -1);
+                        temp++;
+                    }
                 }
             }
             print_file_name(filepath);

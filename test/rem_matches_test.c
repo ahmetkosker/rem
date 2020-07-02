@@ -25,6 +25,6 @@ int main()
 	list_push(root, -1);
 	list_print(root);
 	f = fopen("./LICENSE", "r");
-	print_matches(f, root, "./LICENSE");
+	print_matches(f, root, "./LICENSE", );
 	return 0;
 }

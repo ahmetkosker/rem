@@ -25,7 +25,7 @@ void walkindir(char *dirname, void (*callback)(char *))
             strcpy(filename, dirname);
             strcat(filename, slash);
             strcat(filename, file->d_name);
-            callback(filename);
+            walkindir(filename, callback);
         }
         else if (file->d_type == DT_DIR)
         {
