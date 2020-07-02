@@ -126,12 +126,12 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
 
 void print_line_number(unsigned int line_number)
 {
-    printf("%d: ", line_number);
+    printf("\e[33;1m%d\e[0;m: ", line_number);
 }
 
 void print_file_name(char *fname)
 {
-    printf("%s: ", fname);
+    printf("\e[34;1m%s\e[0;m: ", fname);
 }
 
 void print_between(FILE *f, int line_number, int char_begin, int char_end)
@@ -190,9 +190,9 @@ void print_matches(FILE *f, int_n *root, char *filepath, options option)
                     line_number = temp - option.a - 1;
                 }
             }
+            //printf("\n");
+            printf("\e[31m>>\e[0m");
             printf("\n");
-            printf(">>>>");
-            printf("\n\n");
             if (i == size - 1)
                 return;
             char_begin = 0;
