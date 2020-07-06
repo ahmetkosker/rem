@@ -6,7 +6,7 @@
 int main()
 {
 	FILE *f;
-	int_n *root = list_new(-1);
+	int_node_t *root = list_new(-1);
 	list_push(root, 0);
 	list_push(root, 2);
 	list_push(root, 5);

@@ -3,21 +3,20 @@
 
 #include <stdio.h>
 
-struct int_n
+typedef struct int_node_t
 {
 	int data;
-	struct int_n *next;
-};
-typedef struct int_n int_n;
+	struct int_node_t *next;
+} int_node_t;
 
-int_n *list_new(int first_value);
-unsigned int list_size(int_n *root);
-int list_get(int_n *root, unsigned int index);
-int_n *list_add(int_n *root, unsigned int index, int value);
-int_n *list_remove(int_n *root, unsigned int index);
-int_n *list_push(int_n *root, int value);
-int list_pop(int_n *root);
-void list_print(int_n *root);
-int_n *list_free(int_n *root);
+int_node_t *list_new(int first_value);
+unsigned int list_size(int_node_t *root);
+int list_get(int_node_t *root, unsigned int index);
+int_node_t *list_add(int_node_t *root, unsigned int index, int value);
+int_node_t *list_remove(int_node_t *root, unsigned int index);
+int_node_t *list_push(int_node_t *root, int value);
+int list_pop(int_node_t *root);
+void list_print(int_node_t *root);
+int_node_t *list_free(int_node_t *root);
 
 #endif

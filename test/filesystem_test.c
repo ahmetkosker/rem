@@ -16,7 +16,7 @@ void callback(char *filepath)
 int main()
 {
 #ifdef REM_TEST_DIR
-    walkindir(REM_TEST_DIR, &callback);
+    walk_in_dir(REM_TEST_DIR, &callback);
 #else
     printf("Test directory is not given.\n");
 #endif

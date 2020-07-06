@@ -4,7 +4,7 @@ int main()
 {
 	printf("15 added.\n");
 	printf("List: ");
-	int_n *root = list_new(15);
+	int_node_t *root = list_new(15);
 	list_print(root);
 	printf("7 added.\n");
 	printf("List: ");

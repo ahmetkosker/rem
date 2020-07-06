@@ -1,6 +1,6 @@
 #ifndef _REM_FILESYSTEM_H
 #define _REM_FILESYSTEM_H
 
-void walkindir(char *dirname, void (*oyuncak)(char *));
+int walk_in_dir(char *dir, void (*callback)(char *));
 
 #endif

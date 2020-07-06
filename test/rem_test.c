@@ -4,16 +4,11 @@
 
 int main(int argc, char *argv[])
 {
-
     unsigned char flags = ENABLE_COLOR | ENABLE_LINE_NUMBER | ENABLE_WORD;
-    options option;
-    char *b = argv[3];
-    char *a = argv[4];
-    char *c = argv[5];
-    option.b = b[0] - 48;
-    option.a = a[0] - 48;
-    option.c = c[0] - 48;
-    match_in_file(argv[1], argv[2], 0, option);
+    options_t options;
+    options.before = 4;
+    options.after = 2;
+    match_in_file(argv[1], argv[2], 0, options);
 
     return 0;
 }

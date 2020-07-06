@@ -5,16 +5,16 @@
 #include "options.h"
 #include "int_list.h"
 
-int match_in_file(char *filepath, char *regex, unsigned char flags, options option)
+int match_in_file(char *filepath, char *regex, unsigned char flags, options_t option)
 {
     FILE *f = fopen(filepath, "r");
-    int_n *list = NULL;
+    int_node_t *list = NULL;
     unsigned int count = 0;
     unsigned int where = 0;
     size_t regex_len = strlen(regex);
-    char *temp_p = NULL;
+    char *temp_p = NULL; //It needs for ENABLE_WORD.
     char next_char;
-    if (isflag(flags, ENABLE_WORD))
+    if (isflag(flags, ENABLE_WORD)) //We finds only real word.
     {
         temp_p = malloc(regex_len + 3);
         temp_p[0] = ' ';
@@ -26,25 +26,23 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
         regex = temp_p;
         regex_len += 2;
     }
-    int temp_char = 0;
+    int temp_char = 0; //It needs for ENABLE_CASE_SENSITIVE.
     unsigned int automata_failed = 0;
     unsigned int state = 0;
     unsigned int i = 0;
     int temp = 0;
-    int temp_line_number = 0;
+    int temp_line_number = 0; //It needs for print_matches.
     unsigned int line_number = 0;
-    unsigned int iter = 0;
-    unsigned int sum = 0;
     unsigned char flag;
-    unsigned int state_line_number = 1;
+    unsigned int state_line_number = 1; //It needs for print_matches.
 
-    while (!feof(f)) //Dosya bitene kadar.
+    while (!feof(f)) //Until the file is over.
     {
-        if (automata_failed) //Yeni karakter okumuyoruz.
+        if (automata_failed) // We does not read a new characters.
             automata_failed = 0;
         else
         {
-            next_char = fgetc(f); //Karakter okunuyor.
+            next_char = fgetc(f); //We read a new character.
             where++;
             temp++;
             if (next_char == '\n')
@@ -55,17 +53,17 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
         }
         for (i = 0; i < regex_len; i++)
         {
-            if (state == i) //En son kaldığımız harfe geliyoruz.
+            if (state == i) //We comes to the last word we stayed.
             {
                 if (!isflag(flags, ENABLE_CASE_SENSITIVE))
                 {
-                    if (regex[i] <= 90 && regex[i] >= 65)
+                    if (regex[i] <= 90 && regex[i] >= 65) //For uppercase and lowercase.
                         temp_char = regex[i] + 32;
                     else if (regex[i] <= 122 && regex[i] >= 97)
                         temp_char = regex[i] - 32;
                     if (next_char == regex[i] || temp_char == next_char) //Okunan karakter duruma bağlı harfe eşitse.
                     {
-                        state = i + 1; //Bir sonraki harfe geçiyoruz.
+                        state = i + 1; //We move on to the next word.
                     }
                     else
                     {
@@ -78,7 +76,7 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
                 {
                     if (next_char == regex[i]) //Okunan karakter duruma bağlı harfe eşitse.
                     {
-                        state = i + 1; //Bir sonraki harfe geçiyoruz.
+                        state = i + 1; //We move on to the next word.
                     }
                     else
                     {
@@ -90,13 +88,13 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
                 break;
             }
         }
-        if (state == regex_len) //Kelime bulunduysa.
-        {
+        if (state == regex_len) //If the word found.
+        {                       //List fills.
             if (line_number == 0)
             {
                 if (state_line_number)
                 {
-                    list = list_push(list, -1);
+                    list = list_push(list, -1); // -1 = new line.
                     list = list_push(list, line_number);
                     state_line_number = 0;
                 }
@@ -116,7 +114,7 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
     list = list_push(list, -1);
     list_print(list);
     printf("\n");
-    print_matches(f, list, filepath, option);
+    print_matches(f, list, filepath, option, line_number);
     list_free(list);
     if (temp_p != NULL)
         free(temp_p);
@@ -126,19 +124,19 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options opti
 
 void print_line_number(unsigned int line_number)
 {
-    printf("\e[33;1m%d\e[0;m: ", line_number);
+    printf("\e[33;1m%d\e[0;m:", line_number + 1);
 }
 
 void print_file_name(char *fname)
 {
-    printf("\e[34;1m%s\e[0;m: ", fname);
+    //printf("\e[34;1m%s\e[0;m:", fname);
 }
 
 void print_between(FILE *f, int line_number, int char_begin, int char_end)
 {
     fseek(f, 0, SEEK_SET);
     char next_char;
-    while (line_number != 0)
+    while (line_number != 0) //If we are not in first line.
     {
         next_char = fgetc(f);
         while (next_char != '\n')
@@ -150,25 +148,23 @@ void print_between(FILE *f, int line_number, int char_begin, int char_end)
     while (char_end == -1 && next_char != '\n' || (char_begin + 1 <= char_end))
     {
         next_char = fgetc(f);
-        printf("%c", next_char);
+        if (feof(f))
+            return;
+        if (next_char != '\n')
+            printf("%c", next_char);
         char_begin++;
     }
 }
 
-void print_matches(FILE *f, int_n *root, char *filepath, options option)
+void print_matches(FILE *f, int_node_t *root, char *filepath, options_t options, unsigned int total_line_number)
 {
     if (root == NULL)
         return;
     int i = 0;
-    unsigned int temp;
+    int j;
     unsigned int line_number = 0;
     unsigned int char_begin = 0;
     int size = list_size(root);
-    if (option.c != 0)
-    {
-        option.a = option.c;
-        option.b = option.c;
-    }
     for (i; i < size; i++)
     {
         if (list_get(root, i) == -1)
@@ -176,46 +172,32 @@ void print_matches(FILE *f, int_n *root, char *filepath, options option)
             if (i != 0)
             {
                 print_between(f, line_number, char_begin, -1);
-                if (option.a != 0)
+                printf("\n");
+                for (j = 0; j < options.after && total_line_number >= line_number + j + 1; j++)
                 {
-                    temp = line_number + option.a;
-                    line_number++;
-                    while (line_number <= temp)
-                    {
-                        print_file_name(filepath);
-                        print_line_number(line_number);
-                        print_between(f, line_number, 0, -1);
-                        line_number++;
-                    }
-                    line_number = temp - option.a - 1;
+                    print_file_name(filepath);
+                    print_line_number(line_number + j + 1);
+                    print_between(f, line_number + j + 1, 0, -1);
+                    printf("\n");
                 }
+                printf("--\n");
             }
-            //printf("\n");
-            printf("\e[31m>>\e[0m");
-            printf("\n");
             if (i == size - 1)
                 return;
             char_begin = 0;
             i = i + 1;
             line_number = list_get(root, i);
-            if (option.b != 0)
-            {
-                if (line_number > option.b)
-                {
-                    temp = line_number - option.b;
-                    while (temp < line_number)
-                    {
-                        print_file_name(filepath);
-                        print_line_number(temp);
-                        print_between(f, temp, char_begin, -1);
-                        temp++;
-                    }
-                }
-            }
-            print_file_name(filepath);
-            print_line_number(line_number);
             continue;
         }
+        for (j = options.before; j > 0 && line_number - j > 0; j--)
+        {
+            print_file_name(filepath);
+            print_line_number(line_number - j);
+            print_between(f, line_number - j, 0, -1);
+            printf("\n");
+        }
+        print_file_name(filepath);
+        print_line_number(line_number);
         print_between(f, line_number, char_begin, list_get(root, i));
         char_begin = list_get(root, i);
         printf("\e[32;1m");

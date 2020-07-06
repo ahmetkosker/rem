@@ -1,21 +1,23 @@
 #include <stdlib.h>
 #include "int_list.h"
 
-int_n *list_new(int first_value)
+/* Create a new list. */
+int_node_t *list_new(int first_value)
 {
-    int_n *root = (int_n *)malloc(sizeof(int_n));
+    int_node_t *root = (int_node_t *)malloc(sizeof(int_node_t));
     root->data = first_value;
     root->next = NULL;
     return root;
 }
 
-unsigned int list_size(int_n *root)
+/* Return list size. */
+unsigned int list_size(int_node_t *root)
 {
     if (root == NULL)
         return 0;
     else
     {
-        int size = 1;
+        unsigned int size = 1;
         while (root->next != NULL)
         {
             root = root->next;
@@ -25,115 +27,105 @@ unsigned int list_size(int_n *root)
     }
 }
 
-int list_get(int_n *root, unsigned int index)
+/* Get the element at index. */
+int list_get(int_node_t *root, unsigned int index)
 {
     int size = list_size(root);
-    if (index > size)
-    {
-        printf("Gecersiz sayi ");
-        return 0;
-    }
-    else
-    {
-        int j;
-        for (j = 0; j < index; j++)
-            root = root->next;
-        return (root->data);
-    }
+    if (index >= size)
+        index = size - 1;
+    int j;
+    for (j = 0; j < index; j++)
+        root = root->next;
+    return (root->data);
 }
 
-int_n *list_add(int_n *root, unsigned int index, int value)
+/* Add a new element at index. */
+int_node_t *list_add(int_node_t *root, unsigned int index, int value)
 {
     int size = list_size(root);
-    int_n *iter = (int_n *)malloc(sizeof(int_n));
-    int_n *temp = root;
+    int_node_t *new_node = (int_node_t *)malloc(sizeof(int_node_t));
+    int_node_t *temp = root;
     if (index > size)
-    {
-        printf("Gecersiz sayi ");
-        return NULL;
-    }
-    else
-    {
-        int i;
-        if (index != 0)
-        {
-            for (i = 1; i < index; i++)
-                temp = temp->next;
-            iter->data = value;
-            iter->next = temp->next;
-            temp->next = iter;
-            return root;
-        }
-        else
-        {
-            iter->data = value;
-            iter->next = root;
-            root = iter;
-            return root;
-        }
-    }
-}
+        index = size;
 
-int_n *list_remove(int_n *root, unsigned int index)
-{
-    int size = list_size(root);
-    int_n *temp = root;
-    if (index > size)
+    new_node->data = value;
+    if (index != 0)
     {
-        printf("Gecersiz sayi\n");
-        return NULL;
+        int i;
+        for (i = 0; i < index; i++)
+            temp = temp->next;
+        new_node->next = temp->next;
+        temp->next = new_node;
+        return root;
     }
     else
     {
-        int i;
-        if (index != 0)
-        {
-            for (i = 1; i < index; i++)
-                temp = temp->next;
-            int_n *iter = temp->next;
-            temp->next = temp->next->next;
-            free(iter);
-        }
-        else
-        {
-            root = root->next;
-            free(temp);
-        }
+
+        new_node->next = root;
+        root = new_node;
         return root;
     }
 }
 
-int_n *list_push(int_n *root, int value)
+/* Remove the element at index. */
+int_node_t *list_remove(int_node_t *root, unsigned int index)
 {
-    int_n *temp = root;
+    int size = list_size(root);
+    int_node_t *temp = root;
+    if (index >= size)
+        index = size - 1;
+
+    if (index != 0)
+    {
+        int i;
+        for (i = 1; i < index; i++)
+            temp = temp->next;
+        int_node_t *temp2 = temp->next;
+        temp->next = temp->next->next;
+        free(temp2);
+    }
+    else
+    {
+        root = root->next;
+        free(temp);
+    }
+    return root;
+}
+
+/* Push an element to the list */
+int_node_t *list_push(int_node_t *root, int value)
+{
+    int_node_t *temp = root;
     if (root == NULL)
     {
-        root = (int_n *)malloc(sizeof(int_n));
+        root = (int_node_t *)malloc(sizeof(int_node_t));
         root->data = value;
         root->next = NULL;
         return root;
     }
     while (temp->next != NULL)
         temp = temp->next;
-    temp->next = (int_n *)malloc(sizeof(int_n));
+    temp->next = (int_node_t *)malloc(sizeof(int_node_t));
     temp = temp->next;
     temp->data = value;
     temp->next = NULL;
     return root;
 }
 
-int list_pop(int_n *root)
+/* Pop the last element from the list. */
+int list_pop(int_node_t *root)
 {
     while (root->next->next != NULL)
         root = root->next;
-    int_n *iter = root->next;
-    int value = iter->data;
-    free(iter);
+    int_node_t *temp = root->next;
+    int value = temp->data;
+    free(temp);
     root->next = NULL;
     return value;
 }
 
-void list_print(int_n *root)
+/* Print the list. */
+void list_print(int_node_t *root)
 {
     if (root == NULL)
         printf("Liste bos");
@@ -148,14 +140,15 @@ void list_print(int_n *root)
     printf("\n");
 }
 
-int_n *list_free(int_n *root)
+/* Remove the list. */
+int_node_t *list_free(int_node_t *root)
 {
-    int_n *iter = root;
+    int_node_t *temp = root;
     while (root != NULL)
     {
         root = root->next;
-        free(iter);
-        iter = root;
+        free(temp);
+        temp = root;
     }
     return NULL;
 }
