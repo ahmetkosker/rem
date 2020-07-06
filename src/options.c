@@ -14,7 +14,22 @@ int parse_cmd_arguments(int argc, char *argv[], configuration_t *conf)
     conf->path = argv[argc];
     conf->regex = argv[argc - 1];
     int i;
-    for (i = 2; i < argc; i++)
+    for (i = 3; i < argc; i++)
     {
+        if (argv[i] == "-B")
+        {
+            conf->options.before = argv[i + 1];
+            i++;
+        }
+        else if (argv[i] == "-A")
+        {
+            conf->options.after = argv[i + 1];
+            i++;
+        }
+        if (argv[i] == "-r")
+        {
+            conf->recursive = 1;
+        }
     }
+    return 0;
 }
