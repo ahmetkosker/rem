@@ -31,21 +31,13 @@ int parse_cmd_arguments(int argc, char **argv, configuration_t *conf)
         else if (!(strcmp(argv[i], "-r")))
             conf->recursive = 1;
         else if (!(strcmp(argv[i], "--color")))
-        {
             conf->flags = ENABLE_COLOR;
-        }
         else if (!(strcmp(argv[i], "--case")))
-        {
             conf->flags = ENABLE_COLOR | ENABLE_CASE_SENSITIVE;
-        }
         else if (!(strcmp(argv[i], "--line-number")))
-        {
             conf->flags = ENABLE_COLOR | ENABLE_CASE_SENSITIVE | ENABLE_LINE_NUMBER;
-        }
         else if (!(strcmp(argv[i], "--word")))
-        {
             conf->flags = ENABLE_COLOR | ENABLE_CASE_SENSITIVE | ENABLE_LINE_NUMBER | ENABLE_WORD;
-        }
     }
     return 0;
 }
