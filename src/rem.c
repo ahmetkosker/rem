@@ -125,15 +125,6 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options_t op
     return count;
 }
 
-void print_line_number(unsigned int line_number)
-{
-}
-
-void print_file_name(char *fname)
-{
-    printf("\e[33m%s\e[0;m:", fname);
-}
-
 void print_between(FILE *f, int line_number, int char_begin, int char_end)
 {
     fseek(f, 0, SEEK_SET);
