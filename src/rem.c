@@ -8,6 +8,11 @@
 int match_in_file(char *filepath, char *regex, unsigned char flags, options_t option)
 {
     FILE *f = fopen(filepath, "r");
+    if (f == NULL)
+    {
+        fprintf(stderr, "File cannot be open.\n");
+        return -1;
+    }
     int_node_t *list = NULL;
     unsigned int count = 0;
     unsigned int where = 0;
@@ -32,9 +37,9 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options_t op
     unsigned int i = 0;
     int temp = 0;
     int temp_line_number = 0; //It needs for print_matches.
-    unsigned int line_number = 0;
+    int line_number = 0;
     unsigned char flag;
-    unsigned int state_line_number = 1; //It needs for print_matches.
+    int state_line_number = 1; //It needs for print_matches.
 
     while (!feof(f)) //Until the file is over.
     {
@@ -112,9 +117,7 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options_t op
         }
     }
     list = list_push(list, -1);
-    list_print(list);
-    printf("\n");
-    print_matches(f, list, filepath, option, line_number);
+    print_matches(f, list, filepath, option, flags, line_number);
     list_free(list);
     if (temp_p != NULL)
         free(temp_p);
@@ -124,12 +127,11 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options_t op
 
 void print_line_number(unsigned int line_number)
 {
-    printf("\e[33;1m%d\e[0;m:", line_number + 1);
 }
 
 void print_file_name(char *fname)
 {
-    //printf("\e[34;1m%s\e[0;m:", fname);
+    printf("\e[33m%s\e[0;m:", fname);
 }
 
 void print_between(FILE *f, int line_number, int char_begin, int char_end)
@@ -156,13 +158,17 @@ void print_between(FILE *f, int line_number, int char_begin, int char_end)
     }
 }
 
-void print_matches(FILE *f, int_node_t *root, char *filepath, options_t options, unsigned int total_line_number)
+void print_matches(FILE *f, int_node_t *root, char *filepath, options_t options, unsigned char flags, unsigned int total_line_number)
 {
     if (root == NULL)
         return;
+    int bomb = 0;
+    int is_print_line_numbers = isflag(flags, ENABLE_LINE_NUMBER);
+    int is_print_colorful = isflag(flags, ENABLE_COLOR);
+    int is_print_file_name = isflag(flags, ENABLE_FILE_NAME);
     int i = 0;
     int j;
-    unsigned int line_number = 0;
+    int line_number = 0;
     unsigned int char_begin = 0;
     int size = list_size(root);
     for (i; i < size; i++)
@@ -173,36 +179,57 @@ void print_matches(FILE *f, int_node_t *root, char *filepath, options_t options,
             {
                 print_between(f, line_number, char_begin, -1);
                 printf("\n");
+
                 for (j = 0; j < options.after && total_line_number >= line_number + j + 1; j++)
                 {
-                    print_file_name(filepath);
-                    print_line_number(line_number + j + 1);
+                    if (is_print_file_name)
+                        printf("%s%s%s:", is_print_colorful ? "\e[33m" : "", filepath, is_print_colorful ? "\e[0;m" : "");
+                    if (is_print_line_numbers)
+                        printf("%s%d%s:", is_print_colorful ? "\e[35m" : "", line_number + j + 2, is_print_colorful ? "\e[0;m" : "");
                     print_between(f, line_number + j + 1, 0, -1);
                     printf("\n");
                 }
-                printf("--\n");
+                if (options.before != 0 || options.after != 0)
+                    printf("--\n");
             }
             if (i == size - 1)
                 return;
             char_begin = 0;
             i = i + 1;
             line_number = list_get(root, i);
+            bomb = 1;
             continue;
         }
-        for (j = options.before; j > 0 && line_number - j > 0; j--)
+        if (bomb == 1)
         {
-            print_file_name(filepath);
-            print_line_number(line_number - j);
-            print_between(f, line_number - j, 0, -1);
-            printf("\n");
+
+            for (j = options.before; j > 0; j--)
+            {
+                if (line_number - j < 0)
+                    continue;
+                if (is_print_file_name)
+                    printf("%s%s%s:", is_print_colorful ? "\e[33m" : "", filepath, is_print_colorful ? "\e[0;m" : "");
+                if (is_print_line_numbers)
+                    printf("%s%d%s:", is_print_colorful ? "\e[35m" : "", line_number - j + 1, is_print_colorful ? "\e[0;m" : "");
+                print_between(f, line_number - j, 0, -1);
+                printf("\n");
+            }
+            bomb = 0;
         }
-        print_file_name(filepath);
-        print_line_number(line_number);
+        if (char_begin == 0)
+        {
+            if (is_print_file_name)
+                printf("%s%s%s:", is_print_colorful ? "\e[33m" : "", filepath, is_print_colorful ? "\e[0;m" : "");
+            if (is_print_line_numbers)
+                printf("%s%d%s:", is_print_colorful ? "\e[35m" : "", line_number + 1, is_print_colorful ? "\e[0;m" : "");
+        }
         print_between(f, line_number, char_begin, list_get(root, i));
         char_begin = list_get(root, i);
-        printf("\e[32;1m");
+        if (is_print_colorful)
+            printf("\e[31;1m");
         print_between(f, line_number, char_begin, list_get(root, i + 1));
-        printf("\e[0m");
+        if (is_print_colorful)
+            printf("\e[0m");
         char_begin = list_get(root, i + 1);
         i = i + 1;
     }
