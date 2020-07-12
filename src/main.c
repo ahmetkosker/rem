@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     }
     if (conf.help)
     {
-        printf("Usage:\n");
+        printf("[RULE]\n\n\t<Last two options have to be REGEX and FILE-PATH.>\n\nCommands:\n\n\tUsage: rem [REGEX]...[FILE PATH]...\n\tSearch for REGEX in each FILE.\n\tExample: rem -r 'hello' main.c\n\n[OPTIONS]\n\n\t-r, --recursive        It activates recursive.\n\t-c, --color            It activates color.\n\t-n, --line-number      It print line number.\n\t-s, --case-sensitive   It activates case sensitive.\n\t-w, --pure-word        It finds pure word.\n\t-f, --file-name        It print file name. \n\n");
         exit(EXIT_SUCCESS);
     }
     if (conf.recursive)
