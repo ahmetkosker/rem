@@ -4,97 +4,55 @@
 #include "rem.h"
 #include "options.h"
 #include "int_list.h"
+#include "../tiny-regex-c/re.h"
 
-int match_in_file(char *filepath, char *regex, unsigned char flags, options_t option)
+void match_in_file(char *filepath, char *regex, unsigned char flags, options_t option)
 {
+    re_t pattern = re_compile(regex);
     FILE *f = fopen(filepath, "r");
-    if (f == NULL)
-    {
-        fprintf(stderr, "File cannot be open.\n");
-        return -1;
-    }
+    int state_line_number = 1;
+    int temp_line_number = 0;
     int_node_t *list = NULL;
-    unsigned int count = 0;
-    unsigned int where = 0;
-    size_t regex_len = strlen(regex);
-    char *temp_p = NULL; //It needs for ENABLE_WORD.
-    char next_char;
-    if (isflag(flags, ENABLE_WORD)) //We finds only real word.
-    {
-        temp_p = malloc(regex_len + 3);
-        temp_p[0] = ' ';
-        int i;
-        for (i = 0; i < regex_len; i++)
-            temp_p[i + 1] = regex[i];
-        temp_p[regex_len + 1] = ' ';
-        temp_p[regex_len + 2] = 0;
-        regex = temp_p;
-        regex_len += 2;
-    }
-    int temp_char = 0; //It needs for ENABLE_CASE_SENSITIVE.
-    unsigned int automata_failed = 0;
-    unsigned int state = 0;
-    unsigned int i = 0;
-    int temp = 0;
-    int temp_line_number = 0; //It needs for print_matches.
     int line_number = 0;
-    unsigned char flag;
-    int state_line_number = 1; //It needs for print_matches.
-
-    while (!feof(f)) //Until the file is over.
+    int match_idx = 0;
+    int file_len = 0;
+    int offset = 0;
+    int where = 0;
+    int match_len;
+    int i = 0;
+    char next;
+    while (!feof(f))
     {
-        if (automata_failed) // We does not read a new characters.
-            automata_failed = 0;
-        else
+        fgetc(f);
+        file_len++;
+    }
+    char array[file_len];
+    fseek(f, 0, SEEK_SET);
+    while (!feof(f))
+    {
+        array[i] = fgetc(f);
+        i++;
+    }
+    fseek(f, 0, SEEK_SET);
+    const char *str = array;
+    i = 0;
+    do
+    {
+        match_idx = re_matchp(pattern, str + offset, &match_len);
+        offset = offset + match_idx + match_len;
+        while (i < offset)
         {
-            next_char = fgetc(f); //We read a new character.
-            where++;
-            temp++;
-            if (next_char == '\n')
+            next = fgetc(f);
+            if (next == '\n')
             {
-                temp = 0;
                 line_number++;
+                where = 0;
             }
+            i++;
+            where++;
         }
-        for (i = 0; i < regex_len; i++)
+        if (match_idx != -1)
         {
-            if (state == i) //We comes to the last word we stayed.
-            {
-                if (!isflag(flags, ENABLE_CASE_SENSITIVE))
-                {
-                    if (regex[i] <= 90 && regex[i] >= 65) //For uppercase and lowercase.
-                        temp_char = regex[i] + 32;
-                    else if (regex[i] <= 122 && regex[i] >= 97)
-                        temp_char = regex[i] - 32;
-                    if (next_char == regex[i] || temp_char == next_char) //Okunan karakter duruma bağlı harfe eşitse.
-                    {
-                        state = i + 1; //We move on to the next word.
-                    }
-                    else
-                    {
-                        if (state != 0) //Arka arkaya gelen aynı harfler için automata'nın patlamasına karşı bunu yapıyoruz.
-                            automata_failed = 1;
-                        state = 0;
-                    }
-                }
-                else
-                {
-                    if (next_char == regex[i]) //Okunan karakter duruma bağlı harfe eşitse.
-                    {
-                        state = i + 1; //We move on to the next word.
-                    }
-                    else
-                    {
-                        if (state != 0) //Arka arkaya gelen aynı harfler için automata'nın patlamasına karşı bunu yapıyoruz.
-                            automata_failed = 1;
-                        state = 0;
-                    }
-                }
-                break;
-            }
-        }
-        if (state == regex_len) //If the word found.
-        {                       //List fills.
             if (line_number == 0)
             {
                 if (state_line_number)
@@ -110,19 +68,14 @@ int match_in_file(char *filepath, char *regex, unsigned char flags, options_t op
                 list = list_push(list, line_number);
                 temp_line_number = line_number;
             }
-            list = list_push(list, (temp)-regex_len);
-            list = list_push(list, temp);
-            count++;
-            state = 0;
+            list = list_push(list, where - match_len - 1);
+            list = list_push(list, where - 1);
         }
-    }
-    list = list_push(list, -1);
+    } while (match_idx != -1);
+    list_push(list, -1);
     print_matches(f, list, filepath, option, flags, line_number);
     list_free(list);
-    if (temp_p != NULL)
-        free(temp_p);
     fclose(f);
-    return count;
 }
 
 void print_between(FILE *f, int line_number, int char_begin, int char_end)
