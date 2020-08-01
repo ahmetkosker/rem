@@ -12,7 +12,6 @@ void callback(char *path)
 
 int main(int argc, char **argv)
 {
-
     if (parse_cmd_arguments(argc, argv, &conf) == -1)
     {
         fprintf(stderr, "Bad arguments.\n");
@@ -31,6 +30,5 @@ int main(int argc, char **argv)
     {
         match_in_file(conf.path, conf.regex, conf.flags, conf.options);
     }
-
     exit(EXIT_SUCCESS);
 }

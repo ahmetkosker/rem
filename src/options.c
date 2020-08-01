@@ -56,8 +56,6 @@ int parse_cmd_arguments(int argc, char **argv, configuration_t *conf)
             conf->recursive = 1;
         else if (!(strcmp(argv[i], "-c")))
             conf->flags = conf->flags | ENABLE_COLOR;
-        else if (!(strcmp(argv[i], "-s")))
-            conf->flags = conf->flags | ENABLE_CASE_SENSITIVE;
         else if (!(strcmp(argv[i], "-n")))
             conf->flags = conf->flags | ENABLE_LINE_NUMBER;
         else if (!(strcmp(argv[i], "-w")))
