@@ -1,5 +1,7 @@
-main: main.o rem.o filesystem.o int_list.o options.o
-	gcc -g main.o rem.o filesystem.o int_list.o options.o -o main
+
+
+main: main.o rem.o filesystem.o int_list.o options.o re.o
+	gcc -g main.o rem.o filesystem.o int_list.o options.o re.o -o main
 
 main.o: src/main.c
 	gcc	-c src/main.c
@@ -15,6 +17,9 @@ options.o: src/options.c src/options.h
 
 int_list.o: src/int_list.c src/int_list.h
 	gcc	-c src/int_list.c
+
+re.o: tiny-regex-c/re.c tiny-regex-c/re.h
+	gcc -c tiny-regex-c/re.c
 
 clean:
 	rm *.o
