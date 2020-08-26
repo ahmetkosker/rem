@@ -18,9 +18,24 @@ void match_in_file(char *filepath, char *regex, unsigned char flags, options_t o
     int file_len = 0;
     int offset = 0;
     int where = 0;
-    int match_len;
+    int match_len = strlen(regex);
     int i = 0;
     char next;
+    int pure_word_len = match_len + 3;
+    int is_pure_word = isflag(flags, ENABLE_WORD);
+    if (is_pure_word)
+    {
+        char *pure_word;
+        char temp_word[pure_word_len];
+        temp_word[0] = ' ';
+        for (i = 1; i < pure_word_len - 2; i++)
+            temp_word[i] = regex[i - 1];
+        temp_word[pure_word_len - 2] = ' ';
+        temp_word[pure_word_len - 1] = 0;
+        i = 0;
+        pure_word = temp_word;
+        pattern = re_compile(pure_word);
+    }
     while (!feof(f))
     {
         fgetc(f);
@@ -38,8 +53,16 @@ void match_in_file(char *filepath, char *regex, unsigned char flags, options_t o
     i = 0;
     do
     {
-        match_idx = re_matchp(pattern, str + offset, &match_len);
-        offset = offset + match_idx + match_len;
+        if (is_pure_word)
+        {
+            match_idx = re_matchp(pattern, str + offset, &pure_word_len);
+            offset = offset + match_idx + pure_word_len;
+        }
+        else
+        {
+            match_idx = re_matchp(pattern, str + offset, &match_len);
+            offset = offset + match_idx + match_len;
+        }
         while (i < offset)
         {
             next = fgetc(f);
@@ -68,7 +91,10 @@ void match_in_file(char *filepath, char *regex, unsigned char flags, options_t o
                 list = list_push(list, line_number);
                 temp_line_number = line_number;
             }
-            list = list_push(list, where - match_len - 1);
+            if (is_pure_word)
+                list = list_push(list, where - pure_word_len - 1);
+            else
+                list = list_push(list, where - match_len - 1);
             list = list_push(list, where - 1);
         }
     } while (match_idx != -1);
